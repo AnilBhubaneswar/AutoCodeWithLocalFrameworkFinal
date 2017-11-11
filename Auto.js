@@ -2488,7 +2488,8 @@ function printLocator()
   locator_window = window.open("locator_window","com_MyDomain_locator")
   locator_window.document.write('');
   locator_window.document.write(htmlBody)
-  locator_window.document.write(locatorDocumentContentStart)
+  if(sessionStorage.addNewScenario == "false")
+    locator_window.document.write(locatorDocumentContentStart)
   locator_window.document.write(sessionStorage.locatorDocumentContent)
   
 }
@@ -2538,14 +2539,20 @@ function printScriptManual()
   "&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):" + "</br>" +
   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FlexLib.__init__(self)" + "</br>" +
   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ currentLocatorClassName +
-  ".__init__(self)" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</br>" + "</br>" +  "</br>"+
-  "</br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def " +sessionStorage.pageName + "_operation(self,driver,data):" + "</br>"
+  ".__init__(self)" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</br>" + "</br>" +  "</br>"
+
+  var scriptFunctionStart = "</br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def " + sessionStorage.pageName + "_operation(self,driver,data):" + "</br>"
 
   script_window = window.open("script_window","com_MyDomain_script")
   // To Clear the content each time
   script_window.document.write('');
   script_window.document.write(htmlBody)
-  script_window.document.write(scriptDocumentContentStart)
+  if(sessionStorage.addNewScenario == "false")
+  {
+    script_window.document.write(scriptDocumentContentStart)
+  }
+  script_window.document.write(scriptFunctionStart)
+
 
  	// Code for Pop Up / Alert for Last 
  if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")	  
@@ -2740,8 +2747,11 @@ function printDataFileForManual()
   data_window = window.open("data_window","com_MyDomain_data")
   data_window.document.write('');  
   data_window.document.write(htmlBody)
-  data_window.document.write(dataFileStart)
-  sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
+  if(sessionStorage.addNewScenario == "false")
+  {
+    data_window.document.write(dataFileStart)
+    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
+  }
   data_window.document.write(sessionStorage.dataDocumentContentManual) 
 }
  
@@ -4085,6 +4095,7 @@ function contextmenuEventHandler(event)
 function mousemoveEventHandler(event) 
 {
     var userDefinedClassName = window_handle.document.getElementById("userDefinedClassName").value;
+    sessionStorage.addNewScenario = window_handle.document.getElementById("addNewScenario").checked;
     if(userDefinedClassName && userDefinedClassName.length > 0)
       sessionStorage.pageName = userDefinedClassName
     

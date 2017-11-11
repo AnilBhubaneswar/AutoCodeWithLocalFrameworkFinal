@@ -12,7 +12,6 @@
   // For Add/Edit Methods
   var collectInfo = []
 
-
   // for Manual Operation
   var window_handle = ""
    

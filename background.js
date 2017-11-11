@@ -2,8 +2,9 @@
 
 // listen for our browerAction to be clicked
 chrome.tabs.onUpdated.addListener(function (tab) {
+		//alert(tab)
 
-	if(localStorage.operation == "ManualBuildStart")
+	if(localStorage.operation == "ManualBuildStart" && localStorage.tabID == tab)
 	{	
 		chrome.tabs.executeScript(tab.ib, {
 			file: 'Manual.js'
@@ -11,7 +12,7 @@ chrome.tabs.onUpdated.addListener(function (tab) {
 		
 	}
 	
-	if(localStorage.operation == "automateBuild")
+	if(localStorage.operation == "automateBuild" && localStorage.tabID == tab)
 	{
 		chrome.tabs.executeScript(tab.ib, {
 			file: 'Auto.js'
@@ -20,6 +21,21 @@ chrome.tabs.onUpdated.addListener(function (tab) {
 	}
 	
 });
+
+
+chrome.tabs.onRemoved.addListener(function(tabid, removed) {
+ //alert("tab closed")
+ if(localStorage.tabID == tabid)
+ 	localStorage.operation = "ManualBuildStop";
+})
+
+
+chrome.windows.onRemoved.addListener(function(windowid) {
+ //alert("window closed")
+  if(localStorage.tabID == tabid)
+	 localStorage.operation = "ManualBuildStop";
+})
+
 
 function setTime5(info,tab) {
 	chrome.tabs.getSelected(null, function(tab) {

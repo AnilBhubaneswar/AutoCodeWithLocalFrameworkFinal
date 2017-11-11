@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.tabs.getSelected(null, function(tab) {
   			var code = 'window.location.reload();';
+        localStorage.tabID = tab.id
   			chrome.tabs.executeScript(tab.id, {code: code});
 		});	
   	
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.tabs.getSelected(null, function(tab) {
   			var code = 'window.location.reload();';
+        localStorage.tabID = tab.id
   			chrome.tabs.executeScript(tab.id, {code: code});
 		});	
   	
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.tabs.getSelected(null, function(tab) {
   			var code = 'window.location.reload();';
+        localStorage.tabID = tab.id
   			chrome.tabs.executeScript(tab.id, {code: code});
 		});	
   	

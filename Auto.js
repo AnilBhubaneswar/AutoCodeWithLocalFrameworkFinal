@@ -12,6 +12,7 @@
   // For Add/Edit Methods
   var collectInfo = []
 
+
   // for Manual Operation
   var window_handle = ""
    
@@ -785,7 +786,8 @@
       lableValue = lableValue.replace(/  /g,'_')
       lableValue = lableValue.replace(/ /g,'_')
    
-      lableValue  = (sessionStorage.pageName +"_" +lableValue).toLowerCase()
+      //lableValue  = (sessionStorage.pageName +"_" +lableValue).toLowerCase()
+		lableValue  = lableValue.toLowerCase()
 
       return lableValue
 
@@ -793,6 +795,11 @@
 
   function updateLabelName(lableValue)
   {
+  	if(sessionStorage.elementIDsLocatorMap)
+  		var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
+  	else
+  		var elementIDsLocatorMap = new Object();;
+
     if(lableValue in elementIDsLocatorMap){
       while(true){
         if(lableValue in elementIDsLocatorMap){
@@ -814,6 +821,7 @@
       }//while
     }
     elementIDsLocatorMap[lableValue] = lableValue
+    sessionStorage.elementIDsLocatorMap = JSON.stringify(elementIDsLocatorMap);
     return lableValue
   }
   function printHTMLBody(window_handle,elementIDs,currentElementEventType,actualEle,custom)
@@ -821,48 +829,120 @@
     for (var ids in elementIDs)
     {
    
-      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
-      if (lableValue == null)
-      {
-        lableValue = "NotAbleToIdentify"
-      }
-    
-      lableValue = customizedLabel(lableValue)
-      lableValue = updateLabelName(lableValue)
+		lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+		if (lableValue == null)
+		{
+		lableValue = "NotAbleToIdentify"
+		}
 
-      var table = window_handle.document.getElementById("tableID");
-      var row = table.insertRow ((table.rows.length -1 ));
-     
-      var cell = row.insertCell (0);
-      cell.innerHTML = lableValue;
-      var cell = row.insertCell (1);
-      cell.innerHTML = elementIDs[ids];
-      var cell = row.insertCell (2);
-      cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
-      var cell = row.insertCell (3);
-      cell.innerHTML = currentPageAddress;
-   
-   
-      //elementNode = nodeName.toLowerCase()
-      t = [lableValue, elementIDs[ids],ids,actualEle]
-      collectInfo.push(t)
-   
-   
-      // maintain a hash for element in which screen / page
-      idElementAnil = elementIDs[ids]
-   
-      //mantainElementWithPageNameArray.push({idElementAnil,pageName })
-      var modifiedLocator  = elementIDs[ids]
-      sessionStorage.currentElementLabel = lableValue
+		lableValue = customizedLabel(lableValue)
+		lableValue = updateLabelName(lableValue)
 
-      //added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
-      modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
-      //locatorDocumentContent = locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+elementIDs[ids]+"\"</br>"
-      sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+		var table = window_handle.document.getElementById("tableID");
+		var row = table.insertRow ((table.rows.length -1 ));
 
-    	generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
-    	generateDataFileForManual(lableValue,actualEle)    
-    	generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+		var cell = row.insertCell (0);
+		cell.innerHTML = lableValue;
+		var cell = row.insertCell (1);
+		cell.innerHTML = elementIDs[ids];
+		var cell = row.insertCell (2);
+		cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+		var cell = row.insertCell (3);
+		cell.innerHTML = currentPageAddress;
+
+
+		//elementNode = nodeName.toLowerCase()
+		t = [lableValue, elementIDs[ids],ids,actualEle]
+		collectInfo.push(t)
+
+
+		// maintain a hash for element in which screen / page
+		idElementAnil = elementIDs[ids]
+
+		//mantainElementWithPageNameArray.push({idElementAnil,pageName })
+		var modifiedLocator  = elementIDs[ids]
+		sessionStorage.currentElementLabel = lableValue
+
+		//added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
+		modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
+		//locatorDocumentContent = locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+elementIDs[ids]+"\"</br>"
+		sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+
+		generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+		generateDataFileForManual(lableValue,actualEle)    
+		//generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+    }
+   
+  }
+
+
+  function printHTMLBodyForManualVerification(window_handle,elementIDs,currentElementEventType,actualEle,custom)
+  {
+    for (var ids in elementIDs)
+    {
+   
+		lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+		if (lableValue == null)
+		{
+		lableValue = "NotAbleToIdentify"
+		}
+
+		lableValue = customizedLabel(lableValue)
+		var oldElement = "false"
+
+	  	if(sessionStorage.elementIDsLocatorMap)
+	  		var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
+	  	else
+	  		var elementIDsLocatorMap = new Object();;
+
+		if(lableValue in elementIDsLocatorMap)
+			oldElement = "true"
+
+		// For new Action during verification
+		console.log("oldElement : " , oldElement)
+		if(oldElement == "false")
+		{
+			var table = window_handle.document.getElementById("tableID");
+			var row = table.insertRow ((table.rows.length -1 ));
+
+			var cell = row.insertCell (0);
+			cell.innerHTML = lableValue;
+			var cell = row.insertCell (1);
+			cell.innerHTML = elementIDs[ids];
+			var cell = row.insertCell (2);
+			cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+			var cell = row.insertCell (3);
+			cell.innerHTML = currentPageAddress;
+
+			sessionStorage.currentElementLabel = lableValue
+
+			//added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
+			var modifiedLocator  = elementIDs[ids]
+			modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
+			sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+
+			//generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+			generateDataFileForManual(lableValue,actualEle)    
+			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+		}
+		else
+		{
+			var table = window_handle.document.getElementById("tableID");
+			var row = table.insertRow ((table.rows.length -1 ));
+
+			var cell = row.insertCell (0);
+			cell.innerHTML = lableValue;
+			var cell = row.insertCell (1);
+			cell.innerHTML = elementIDs[ids];
+			var cell = row.insertCell (2);
+			//cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+			cell.innerHTML = "Verification Code"
+			var cell = row.insertCell (3);
+			cell.innerHTML = currentPageAddress;
+
+			//sessionStorage.currentElementLabel = "NotRequired"
+			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+		}
     }
    
   }
@@ -931,7 +1011,7 @@
       }
 
       // Adding support for Verify logic in Operation 
-      if (sessionStorage.setTime == "true")
+      if (sessionStorage.setTime5 == "true")
       {
           var table = window_handle.document.getElementById("tableID");
           var row = table.insertRow ((table.rows.length -1 ));
@@ -942,14 +1022,35 @@
           cell.innerHTML = elementIDs[ids];
       
           var cell = row.insertCell (2);
-          cell.innerHTML = "Time.Sleep";        
+          cell.innerHTML = "Time.Sleep(5)";        
 
           var cell = row.insertCell (3);
           cell.innerHTML = currentPageAddress;
 
-          sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "time.sleep(2)</br>"
-          sessionStorage.setTime = "false"  
+          sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "time.sleep(5)</br>"
+          sessionStorage.setTime5 = "false"  
       } 
+
+      if (sessionStorage.setTime10 == "true")
+      {
+          var table = window_handle.document.getElementById("tableID");
+          var row = table.insertRow ((table.rows.length -1 ));
+
+          var cell = row.insertCell (0);
+          cell.innerHTML = lableValue;
+          var cell = row.insertCell (1);
+          cell.innerHTML = elementIDs[ids];
+      
+          var cell = row.insertCell (2);
+          cell.innerHTML = "Time.Sleep(10)";        
+
+          var cell = row.insertCell (3);
+          cell.innerHTML = currentPageAddress;
+
+          sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "time.sleep(10)</br>"
+          sessionStorage.setTime10 = "false"  
+      } 
+
     }
   }
    
@@ -1507,6 +1608,7 @@
       tab3 = tab1 + tab1 + tab1
     }
 
+    console.log("needToAddVerify : " ,needToAddVerify)
   if(needToAddVerify == "true")
   {
     var currentElementEventType = getElementEventType(ele)
@@ -2318,7 +2420,7 @@ function printHTMLFooter(window_handle)
   "<button id='downloadSpec' class='button' value='Download Spec File'> Download Spec File </button>"+
   "<button id='downloadLocator' class='button' value='Download Locator File'> Download Locator File </button>" +
   "<button id='downloadJob' class='button' value='Download Job File'> Download Job File </button>" +
-  "<br><label for='userDefinedClassName'>Class Name : </label><input type='text' id='userDefinedClassName' style='height: 3em;border-color: black;'>" + 
+  "<br><label for='userDefinedClassName'>Class Name : </label><input type='text' id='userDefinedClassName' style='height: 3em;border-color: black;' value='DemoClass'>" + 
   "<label for='addNewScenario'>   Add New Scenario  </label><input type='checkbox' id='addNewScenario' value=''><br>"
 
   window_handle.document.write(htmlFooter)
@@ -2786,9 +2888,16 @@ function getElementValue(elementV)
               return elementV.options[elementV.selectedIndex].text
         }
         if (elementNodeType == "select")
-            return elementV.options[elementV.selectedIndex].text
+        {
+        	if(elementV.options[elementV.selectedIndex])
+            	return elementV.options[elementV.selectedIndex].text
+            else
+            	return ""
+        }
         else
+        {
           return elementV.innerText
+        }
     }
  
    return null
@@ -3138,7 +3247,15 @@ function elementChanged(custom)
     console.log("elementIDs : " , Object.values(preferedID)[0])
     console.log("elementIDs : " , elementIDs)
     console.log("preferedID : " , preferedID)
-    printHTMLBody(window_handle,preferedID,currentElementEventType,currentElement,custom)
+    console.log("sessionStorage.setRecordVerify : " , sessionStorage.setRecordVerify)
+    if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "true")
+    {
+    	printHTMLBodyForManualVerification(window_handle,preferedID,currentElementEventType,currentElement,custom)
+    }
+    else
+    {
+    	printHTMLBody(window_handle,preferedID,currentElementEventType,currentElement,custom)
+    }
     alreadyDisplayed = "yes"
   }
 }
@@ -3619,7 +3736,7 @@ function findCountForClickedElements()
 var elementIDsArrayActualMap = new Object();
 var maintainOrderForElementsActual = []
 var setOfElements = new Set();
-var elementIDsLocatorMap = new Object();
+//var elementIDsLocatorMap = new Object();
 //var setOfElementsToPrint = new Set();
 var mantainElementWithPageNameArray = []
  
@@ -3940,6 +4057,7 @@ function handler(event)
  {
     currentElementEventType = event.type
     currentElement = event.srcElement ;
+    console.log("currentElement : " , currentElement)
     // get the page name
     var baseUrl = event.srcElement.baseURI.toLowerCase();
     generatePageName(baseUrl)

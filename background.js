@@ -1,7 +1,8 @@
 // this is the background code...
 
 // listen for our browerAction to be clicked
-chrome.tabs.onUpdated.addListener(function (tab) {	
+chrome.tabs.onUpdated.addListener(function (tab) {
+
 	if(localStorage.operation == "ManualBuildStart")
 	{	
 		chrome.tabs.executeScript(tab.ib, {
@@ -20,9 +21,16 @@ chrome.tabs.onUpdated.addListener(function (tab) {
 	
 });
 
-function setTime(info,tab) {
+function setTime5(info,tab) {
 	chrome.tabs.getSelected(null, function(tab) {
-  			var code = 'sessionStorage.setTime = "true";';
+  			var code = 'sessionStorage.setTime5 = "true";';
+  			chrome.tabs.executeScript(tab.id, {code: code});
+		});	
+		}
+
+function setTime10(info,tab) {
+	chrome.tabs.getSelected(null, function(tab) {
+  			var code = 'sessionStorage.setTime10 = "true";';
   			chrome.tabs.executeScript(tab.id, {code: code});
 		});	
 		}
@@ -56,33 +64,64 @@ function setTableVerify(info,tab) {
 		});	
 		}
 
+function setRecordVerify(info,tab) {
+	chrome.tabs.getSelected(null, function(tab) {
+  			var code = 'sessionStorage.setRecordVerify = "true";';
+  			chrome.tabs.executeScript(tab.id, {code: code});
+		});	
+		}
+function setStopRecordVerify(info,tab) {
+	chrome.tabs.getSelected(null, function(tab) {
+  			var code = 'sessionStorage.setRecordVerify = "false";';
+  			chrome.tabs.executeScript(tab.id, {code: code});
+		});	
+		}
+
 
 chrome.contextMenus.create({
-  title: "Add time.sleep(2)%s", 
+  title: "Record Verify Logic", 
   contexts:["all"], 
-  onclick: setTime,
+  onclick: setRecordVerify,
 });
 
 chrome.contextMenus.create({
-  title: "Add Verify Logic%s", 
+  title: "Stop Recording Verify Logic", 
+  contexts:["all"], 
+  onclick: setStopRecordVerify,
+});
+
+chrome.contextMenus.create({
+  title: "Add time.sleep(5)", 
+  contexts:["all"], 
+  onclick: setTime5,
+});
+
+chrome.contextMenus.create({
+  title: "Add time.sleep(10)", 
+  contexts:["all"], 
+  onclick: setTime10,
+});
+
+chrome.contextMenus.create({
+  title: "Verify This", 
   contexts:["all"], 
   onclick: setVerify,
 });
 
 chrome.contextMenus.create({
-  title: "Loop Start%s", 
+  title: "Loop Start", 
   contexts:["all"], 
   onclick: setLoop,
 });
 
 chrome.contextMenus.create({
-  title: "Loop End%s", 
+  title: "Loop End", 
   contexts:["all"], 
   onclick: endLoop,
 });
 
 chrome.contextMenus.create({
-  title: "Add Table Verification%s", 
+  title: "Add Table Verification", 
   contexts:["all"], 
   onclick: setTableVerify,
 });

@@ -870,7 +870,7 @@
 
 		generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
 		generateDataFileForManual(lableValue,actualEle)    
-		//generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+		//generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
     }
    
   }
@@ -923,7 +923,8 @@
 
 			//generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
 			generateDataFileForManual(lableValue,actualEle)    
-			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
+      
 		}
 		else
 		{
@@ -941,7 +942,7 @@
 			cell.innerHTML = currentPageAddress;
 
 			//sessionStorage.currentElementLabel = "NotRequired"
-			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"false")
 		}
     }
    
@@ -1566,7 +1567,7 @@
     
   }
 
-  function generateVerificationScriptForManual(lableValue,locatorName,ids,ele)
+  function generateVerificationScriptForManual(lableValue,locatorName,ids,ele,newElement)
   {
     var tab = ""
     var tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
@@ -1608,7 +1609,16 @@
       tab3 = tab1 + tab1 + tab1
     }
 
-    console.log("needToAddVerify : " ,needToAddVerify)
+    if(newElement == "true")
+    {
+      needToAddVerify = "false" 
+      var currentElementEventType = getElementEventType(ele)
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+        // selenium command . like driver.find_element_by_id(self.lable).send_keys()
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+    }
+  
   if(needToAddVerify == "true")
   {
     var currentElementEventType = getElementEventType(ele)

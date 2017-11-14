@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
   manualBuildStopButton.addEventListener('click',function()
   {
   	localStorage.operation = "ManualBuildStop";
+
+  chrome.tabs.getSelected(null, function(tab) {
+        var code = 'sessionStorage.clear();';
+        localStorage.tabID = tab.id
+        chrome.tabs.executeScript(tab.id, {code: code});
+    }); 
 	
 	chrome.tabs.getSelected(null, function(tab) {
   			var code = 'window.location.reload();';

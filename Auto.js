@@ -1,4 +1,4 @@
-  (function() {
+ (function() {
   var locatorDocumentContent = ""
   var scriptDocumentContent = ""
   var dataDocumentContent = ""
@@ -12,6 +12,12 @@
   // For Add/Edit Methods
   var collectInfo = []
 
+
+  // For Tab (Selenium Intendation)
+  var tab = ""
+  var tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  var tab2 = tab1 + tab1
+  var tab3 = tab1 + tab1 + tab1
 
   // for Manual Operation
   var window_handle = ""
@@ -677,8 +683,29 @@
     "</style></head><body>";
     htmlTableHeader = "<table id='tableID'><tbody><tr><th colspan=4 align=center <font face=&quot;Garamond, Times New Roman, Georgia&quot; size=6 color=&quot;#FF0000&quot;> <h2><font face=Verdana color=red>Generate Python Selenium Script in a Click</font></h2></th></tr>";
     htmlTableTrHeader= "<tr><th <font face=&quot;Garamond, Times New Roman, Georgia&quot; size=4 color=&quot;#FF0000&quot;> <font face=Verdana color=grey>Name Of Identifier </font></th><th <font face=&quot;Garamond, Times New Roman, Georgia&quot; size=4 color=&quot;#FF0000&quot;> <font face=Verdana color=grey>Identifier</font></th><th <font face=&quot;Garamond, Times New Roman, Georgia&quot; size=4 color=&quot;#FF0000&quot;> <font face=Verdana color=grey>Selenium Command</font></th><th <font face=&quot;Garamond, Times New Roman, Georgia&quot; size=4 color=&quot;#FF0000&quot;> <font face=Verdana color=grey>Screen Name</font></th></tr>";
-    //var window_handle=window.open("parentWindow","com_MyDomain_myWindowForThisPurpose");
+
     var window_handle=openOnce('parentWindow', 'MyWindowName');
+
+    // This code is for driver.get(url)
+    
+    //var table = window_handle.document.getElementById("tableID");
+    //var row = table.insertRow ((2));
+
+    //var cell = row.insertCell (0);
+    //cell.innerHTML = "url";
+    //var cell = row.insertCell (1);
+    //cell.innerHTML = "NA";
+    //var cell = row.insertCell (2);
+
+    //cell.innerHTML = "driver.get(data[\"url\"])";
+    //var cell = row.insertCell (3);
+    //cell.innerHTML = window.location.href;
+
+    //sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + "&nbsp;&nbsp;&nbsp;&nbsp;" + "url: \""+ window.location.href +"\"</br>"
+    //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "#driver.get(data[\"url\"])" + "</br></br>"
+
+
+
     return window_handle
   }
 
@@ -737,36 +764,36 @@
       // open a blank "target" window
       // or get the reference to the existing "target" window
       //var winref = window.open('', target, '', true);
-  	var winref = window.open('', target);	
+    var winref = window.open('', target); 
 
       // if the "target" window was just opened, change its url
       if(winref.location.href === 'about:blank'){
-      	// initialised for all variable for 1st time 
+        // initialised for all variable for 1st time 
 
-      	sessionStorage.functionContentManual = ""
-      	sessionStorage.verifyFunctionContentManual = ""    	
-      	sessionStorage.dataDocumentContentManual = ""
-      	//sessionStorage.specDocumentContentForManual = ""
-      	sessionStorage.locatorDocumentContent = ""
+        sessionStorage.functionContentManual = ""
+        sessionStorage.verifyFunctionContentManual = ""     
+        sessionStorage.dataDocumentContentManual = ""
+        //sessionStorage.specDocumentContentForManual = ""
+        sessionStorage.locatorDocumentContent = ""
           winref.location.href = url;
-  	 	winref.document.write(htmlBody)
-  	  	winref.document.write(htmlTableHeader)
-  	  	winref.document.write(htmlTableTrHeader)
-  	  	printHTMLFooter(winref)
+        winref.document.write(htmlBody)
+        winref.document.write(htmlTableHeader)
+        winref.document.write(htmlTableTrHeader)
+        printHTMLFooter(winref)
 
-  	  // Add click event to buttons
+      // Add click event to buttons
 
-  	  	winref.document.getElementById("downloadData").removeEventListener("click", printDataFileForManual);
-  	  	winref.document.getElementById("downloadScript").removeEventListener("click", printScriptManual);
-  	  	winref.document.getElementById("downloadSpec").removeEventListener("click", printSpecFileForManual);
-  	  	winref.document.getElementById("downloadLocator").removeEventListener("click", printLocator);
-  	  	winref.document.getElementById("downloadJob").removeEventListener("click", printJob);
+        winref.document.getElementById("downloadData").removeEventListener("click", printDataFileForManual);
+        winref.document.getElementById("downloadScript").removeEventListener("click", printScriptManual);
+        winref.document.getElementById("downloadSpec").removeEventListener("click", printSpecFileForManual);
+        winref.document.getElementById("downloadLocator").removeEventListener("click", printLocator);
+        winref.document.getElementById("downloadJob").removeEventListener("click", printJob);
 
-  	  	winref.document.getElementById("downloadData").addEventListener("click", printDataFileForManual);
-  	  	winref.document.getElementById("downloadScript").addEventListener("click", printScriptManual);
-  	  	winref.document.getElementById("downloadSpec").addEventListener("click", printSpecFileForManual);
-  	  	winref.document.getElementById("downloadLocator").addEventListener("click", printLocator);
-  	  	winref.document.getElementById("downloadJob").addEventListener("click", printJob);
+        winref.document.getElementById("downloadData").addEventListener("click", printDataFileForManual);
+        winref.document.getElementById("downloadScript").addEventListener("click", printScriptManual);
+        winref.document.getElementById("downloadSpec").addEventListener("click", printSpecFileForManual);
+        winref.document.getElementById("downloadLocator").addEventListener("click", printLocator);
+        winref.document.getElementById("downloadJob").addEventListener("click", printJob);
 
 
       }
@@ -776,30 +803,34 @@
 
   function customizedLabel(lableValue)
   {
-        //remove all special char
-      lableValue = lableValue.replace(/[^a-zA-Z 0-9]/g, "")
-   
-      // Remove leading and trailing space
-      lableValue = lableValue.trim()
-   
-      // Remove all white space
-      lableValue = lableValue.replace(/  /g,'_')
-      lableValue = lableValue.replace(/ /g,'_')
+      //remove all special char
+    lableValue = lableValue.replace(/[^a-zA-Z 0-9]/g, "")
+ 
+    // Remove leading and trailing space
+    lableValue = lableValue.trim()
+ 
+    // Remove all white space
+    lableValue = lableValue.replace(/  /g,'_')
+    lableValue = lableValue.replace(/ /g,'_')
    
       //lableValue  = (sessionStorage.pageName +"_" +lableValue).toLowerCase()
-		lableValue  = lableValue.toLowerCase()
+    lableValue  = lableValue.toLowerCase()
 
-      return lableValue
+    if(/^\d/.test(lableValue))
+       lableValue = sessionStorage.pageName + lableValue
+
+    return lableValue
 
   }
 
-  function updateLabelName(lableValue)
+  function updateLabelName(lableValue,locatorValue)
   {
-  	if(sessionStorage.elementIDsLocatorMap)
-  		var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
-  	else
-  		var elementIDsLocatorMap = new Object();;
 
+    var elementIDsLocatorMap = new Object();;
+
+    if(sessionStorage.elementIDsLocatorMap)
+      var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
+    
     if(lableValue in elementIDsLocatorMap){
       while(true){
         if(lableValue in elementIDsLocatorMap){
@@ -820,130 +851,320 @@
           break
       }//while
     }
-    elementIDsLocatorMap[lableValue] = lableValue
+    elementIDsLocatorMap[lableValue] = locatorValue
     sessionStorage.elementIDsLocatorMap = JSON.stringify(elementIDsLocatorMap);
     return lableValue
   }
+
   function printHTMLBody(window_handle,elementIDs,currentElementEventType,actualEle,custom)
   {
     for (var ids in elementIDs)
     {
    
-		lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
-		if (lableValue == null)
-		{
-		lableValue = "NotAbleToIdentify"
-		}
+      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+      if (lableValue == null)
+      {
+        lableValue = "NotAbleToIdentify"
+      }
 
-		lableValue = customizedLabel(lableValue)
-		lableValue = updateLabelName(lableValue)
+      lableValue = customizedLabel(lableValue)
+      lableValue = updateLabelName(lableValue,elementIDs[ids])
 
-		var table = window_handle.document.getElementById("tableID");
-		var row = table.insertRow ((table.rows.length -1 ));
+      var table = window_handle.document.getElementById("tableID");
+      var row = table.insertRow ((table.rows.length -1 ));
 
-		var cell = row.insertCell (0);
-		cell.innerHTML = lableValue;
-		var cell = row.insertCell (1);
-		cell.innerHTML = elementIDs[ids];
-		var cell = row.insertCell (2);
-		cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
-		var cell = row.insertCell (3);
-		cell.innerHTML = currentPageAddress;
+      var cell = row.insertCell (0);
+      cell.innerHTML = lableValue;
+      var cell = row.insertCell (1);
+      cell.innerHTML = elementIDs[ids];
+      var cell = row.insertCell (2);
 
-
-		//elementNode = nodeName.toLowerCase()
-		t = [lableValue, elementIDs[ids],ids,actualEle]
-		collectInfo.push(t)
+      cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+      var cell = row.insertCell (3);
+      cell.innerHTML = currentPageAddress;
 
 
-		// maintain a hash for element in which screen / page
-		idElementAnil = elementIDs[ids]
+      //elementNode = nodeName.toLowerCase()
+      t = [lableValue, elementIDs[ids],ids,actualEle]
+      collectInfo.push(t)
 
-		//mantainElementWithPageNameArray.push({idElementAnil,pageName })
-		var modifiedLocator  = elementIDs[ids]
-		sessionStorage.currentElementLabel = lableValue
 
-		//added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
-		modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
-		//locatorDocumentContent = locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+elementIDs[ids]+"\"</br>"
-		sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+      // maintain a hash for element in which screen / page
+      idElementAnil = elementIDs[ids]
 
-		generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
-		generateDataFileForManual(lableValue,actualEle)    
-		//generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
-    }
+      //mantainElementWithPageNameArray.push({idElementAnil,pageName })
+      var modifiedLocator  = elementIDs[ids]
+      sessionStorage.currentElementLabel = lableValue
+
+      //added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
+      modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
+      //locatorDocumentContent = locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+elementIDs[ids]+"\"</br>"
+      sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+
+      generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+      generateDataFileForManual(lableValue,actualEle)    
+      //generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
+      
+      if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
+        sessionStorage.setLoop = "continue"
    
   }
+}
 
+
+  function updateHTMLBody(window_handle,elementIDs,currentElementEventType,actualEle,custom)
+  {
+    console.log("currentElementEventType : " , currentElementEventType)
+    for (var ids in elementIDs)
+    {
+    
+      console.log("Gi")
+      lableValue  = sessionStorage.currentElementLabel
+      
+      var table = window_handle.document.getElementById("tableID");
+      var row = table.deleteRow ((table.rows.length -2 ));        
+  
+
+      //var table = window_handle.document.getElementById("tableID");
+      //var row = table.insertRow ((table.rows.length -1 ));
+
+      //var cell = row.insertCell (0);
+      //cell.innerHTML = lableValue;
+      //var cell = row.insertCell (1);
+      //cell.innerHTML = elementIDs[ids];
+      //var cell = row.insertCell (2);
+      //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+      //var cell = row.insertCell (3);
+      //cell.innerHTML = currentPageAddress;
+
+      updateTabValue()
+      if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "true")
+      {
+        var temp = tab +generateWaitCommandHelper(ids,lableValue) +tab2 + "if \"" +lableValue + "\" in data:" + "</br>" + tab3 + seleniumCommandHelper(ids,lableValue,previousElementEventType) + "</br></br>"
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
+
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+
+        var scriptVerify = helperForVerification(ids,lableValue,actualEle)
+        var temp = tab +generateWaitCommandHelper(ids,lableValue) + tab2 + "if \"" + lableValue + "\" in data:" + "</br>" +  tab3 + scriptVerify + "</br></br>"
+
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
+
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" + lableValue + "\" in data:" + "</br>"
+          //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
+
+
+
+
+        var table = window_handle.document.getElementById("tableID");
+        var row = table.insertRow ((table.rows.length -1 ));
+
+        var cell = row.insertCell (0);
+        cell.innerHTML = lableValue;
+        var cell = row.insertCell (1);
+        cell.innerHTML = elementIDs[ids];
+        var cell = row.insertCell (2);
+        //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+        cell.innerHTML = "Verification Code"
+        var cell = row.insertCell (3);
+        cell.innerHTML = currentPageAddress;
+
+        //sessionStorage.currentElementLabel = "NotRequired"
+        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,currentElement,"false")
+      }     
+      else
+      {
+        var temp =tab + generateWaitCommandHelper(ids,lableValue) + tab2 + "if \"" +lableValue + "\" in data:" + "</br>" + tab3 + seleniumCommandHelper(ids,lableValue,previousElementEventType) + "</br></br>"
+        sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace(temp,"")
+        console.log("Temp : " , temp)
+
+          //sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateWaitCommandHelper(ids,lableValue)
+          // if "label" in data:
+          //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+          // selenium command . like driver.find_element_by_id(self.lable).send_keys()
+          //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+          var table = window_handle.document.getElementById("tableID");
+          var row = table.insertRow ((table.rows.length -1 ));
+
+          var cell = row.insertCell (0);
+          cell.innerHTML = lableValue;
+          var cell = row.insertCell (1);
+          cell.innerHTML = elementIDs[ids];
+          var cell = row.insertCell (2);
+          cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+          var cell = row.insertCell (3);
+          cell.innerHTML = currentPageAddress;
+
+          generateOperationScriptForManual(lableValue,elementIDs[ids],ids,currentElement)
+
+      }
+      //generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+      
+      if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
+        sessionStorage.setLoop = "continue"
+    }
+}
+
+function isElementInList(lableValue, locatorName)
+{
+  var elementIDsLocatorMap = new Object();
+  if(sessionStorage.elementIDsLocatorMap)
+    var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
+  var labelList = new Array()
+  if(lableValue in elementIDsLocatorMap)
+  {
+    while(true){
+      if(lableValue in elementIDsLocatorMap)
+      {
+        labelList.push(lableValue)
+        var numb = lableValue.match(/\d/g);
+        if(numb !=null){
+          numb = numb.join("");
+          lableValue = lableValue.replace(numb,"")      
+          numb = Number(numb) + 1
+          lableValue = lableValue+numb
+        }
+        else
+        {
+          numb = 1
+          lableValue = lableValue+numb
+        }
+      }
+      else
+      {
+        break
+      }
+    }//while
+  }
+
+for(var i=0;i<labelList.length;i++)
+{
+  if(elementIDsLocatorMap[labelList[i]] == locatorName )
+    return true
+}
+
+return false
+}
+
+function getElementFromList(lableValue, locatorName)
+{
+  var elementIDsLocatorMap = new Object();
+  if(sessionStorage.elementIDsLocatorMap)
+    var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
+  var labelList = new Array()
+  if(lableValue in elementIDsLocatorMap)
+  {
+    while(true){
+      if(lableValue in elementIDsLocatorMap)
+      {
+        labelList.push(lableValue)
+        var numb = lableValue.match(/\d/g);
+        if(numb !=null){
+          numb = numb.join("");
+          lableValue = lableValue.replace(numb,"")      
+          numb = Number(numb) + 1
+          lableValue = lableValue+numb
+        }
+        else
+        {
+          numb = 1
+          lableValue = lableValue+numb
+        }
+      }
+      else
+      {
+        break
+      }
+    }//while
+  }
+
+  for(var i=0;i<labelList.length;i++)
+  {
+    if(elementIDsLocatorMap[labelList[i]] == locatorName )
+    {
+      return labelList[i]
+    }
+  }
+}
 
   function printHTMLBodyForManualVerification(window_handle,elementIDs,currentElementEventType,actualEle,custom)
   {
     for (var ids in elementIDs)
     {
    
-		lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
-		if (lableValue == null)
-		{
-		lableValue = "NotAbleToIdentify"
-		}
+      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+      if (lableValue == null)
+      {
+      lableValue = "NotAbleToIdentify"
+      }
 
-		lableValue = customizedLabel(lableValue)
-		var oldElement = "false"
+      lableValue = customizedLabel(lableValue)
+      var oldElement = "false"
 
-	  	if(sessionStorage.elementIDsLocatorMap)
-	  		var elementIDsLocatorMap = JSON.parse(sessionStorage.elementIDsLocatorMap);
-	  	else
-	  		var elementIDsLocatorMap = new Object();;
+      if(isElementInList(lableValue, elementIDs[ids]))
+      {
 
-		if(lableValue in elementIDsLocatorMap)
-			oldElement = "true"
+        oldElement = "true"
+        lableValue = getElementFromList(lableValue, elementIDs[ids])
+      }
 
-		// For new Action during verification
-		console.log("oldElement : " , oldElement)
-		if(oldElement == "false")
-		{
-			var table = window_handle.document.getElementById("tableID");
-			var row = table.insertRow ((table.rows.length -1 ));
-
-			var cell = row.insertCell (0);
-			cell.innerHTML = lableValue;
-			var cell = row.insertCell (1);
-			cell.innerHTML = elementIDs[ids];
-			var cell = row.insertCell (2);
-			cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
-			var cell = row.insertCell (3);
-			cell.innerHTML = currentPageAddress;
-
-			sessionStorage.currentElementLabel = lableValue
-
-			//added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
-			var modifiedLocator  = elementIDs[ids]
-			modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
-			sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
-
-			//generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
-			generateDataFileForManual(lableValue,actualEle)    
-			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
       
-		}
-		else
-		{
-			var table = window_handle.document.getElementById("tableID");
-			var row = table.insertRow ((table.rows.length -1 ));
+      // For new Action during verification
+      console.log("oldElement : " , oldElement)
+      if(oldElement == "false")
+      {
 
-			var cell = row.insertCell (0);
-			cell.innerHTML = lableValue;
-			var cell = row.insertCell (1);
-			cell.innerHTML = elementIDs[ids];
-			var cell = row.insertCell (2);
-			//cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
-			cell.innerHTML = "Verification Code"
-			var cell = row.insertCell (3);
-			cell.innerHTML = currentPageAddress;
+        lableValue = updateLabelName(lableValue,elementIDs[ids])
 
-			//sessionStorage.currentElementLabel = "NotRequired"
-			generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"false")
-		}
+        var table = window_handle.document.getElementById("tableID");
+        var row = table.insertRow ((table.rows.length -1 ));
+
+        var cell = row.insertCell (0);
+        cell.innerHTML = lableValue;
+        var cell = row.insertCell (1);
+        cell.innerHTML = elementIDs[ids];
+        var cell = row.insertCell (2);
+        cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+        var cell = row.insertCell (3);
+        cell.innerHTML = currentPageAddress;
+
+        sessionStorage.currentElementLabel = lableValue
+
+        //added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
+        var modifiedLocator  = elementIDs[ids]
+        modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
+        sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+
+        //generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+        generateDataFileForManual(lableValue,actualEle)    
+        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
+
+      }
+      else
+      {
+        var table = window_handle.document.getElementById("tableID");
+        var row = table.insertRow ((table.rows.length -1 ));
+
+        var cell = row.insertCell (0);
+        cell.innerHTML = lableValue;
+        var cell = row.insertCell (1);
+        cell.innerHTML = elementIDs[ids];
+        var cell = row.insertCell (2);
+        //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+        cell.innerHTML = "Verification Code"
+        var cell = row.insertCell (3);
+        cell.innerHTML = currentPageAddress;
+
+        //sessionStorage.currentElementLabel = "NotRequired"
+        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"false")
+      }
+
+      if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
+        sessionStorage.setLoop = "continue"
+
     }
    
   }
@@ -977,6 +1198,7 @@
           var scriptVerify = helperForVerification(ids,lableValue,actualEle)
           if (scriptVerify!=null && scriptVerify.length > 0 )
           { 
+
             var table = window_handle.document.getElementById("tableID");
             var row = table.insertRow ((table.rows.length -1 ));
            
@@ -986,7 +1208,7 @@
             cell.innerHTML = elementIDs[ids];
 
             var cell = row.insertCell (2);
-            cell.innerHTML = "Verify";
+            cell.innerHTML = "Verify This";
             var temp = generateWaitCommandHelper(ids,lableValue)
             temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
             temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + scriptVerify + "</br></br>"
@@ -1014,6 +1236,7 @@
       // Adding support for Verify logic in Operation 
       if (sessionStorage.setTime5 == "true")
       {
+           
           var table = window_handle.document.getElementById("tableID");
           var row = table.insertRow ((table.rows.length -1 ));
 
@@ -1028,12 +1251,14 @@
           var cell = row.insertCell (3);
           cell.innerHTML = currentPageAddress;
 
+
           sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "time.sleep(5)</br>"
           sessionStorage.setTime5 = "false"  
       } 
 
       if (sessionStorage.setTime10 == "true")
       {
+
           var table = window_handle.document.getElementById("tableID");
           var row = table.insertRow ((table.rows.length -1 ));
 
@@ -1070,8 +1295,7 @@
   } 
 
   function createFunction(a)
-  {
-   
+  { 
       var addFlag = false
       var operationFlag = false
       var verificationFlag = false
@@ -1392,9 +1616,9 @@
 
   function generateScript()
   {
-  	scriptDocumentContent = ""
-  	verifyScriptDocumentContent = ""
-  	FunctionAnil = new Array()
+    scriptDocumentContent = ""
+    verifyScriptDocumentContent = ""
+    FunctionAnil = new Array()
 
       allFunctiionsArray = createFunction(collectInfo)
       if(allFunctiionsArray !=null && allFunctiionsArray.length > 0 )
@@ -1554,14 +1778,12 @@
         var locatorName = tempFunctionArray[0][1]
         var ids = tempFunctionArray[0][2]
         var ele = tempFunctionArray[0][3]
-        var currentElementEventType = getElementEventType(ele)
+        var currentElementType = getElementEventType(ele)
         
         functionContent = functionContent + generateWaitCommandHelper(ids,lableValue)
        
         // selenium command . like driver.find_element_by_id(self.lable).send_keys()
-        functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
-
-       
+        functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementType) + "</br></br>"
        }
       return functionContent
     
@@ -1569,50 +1791,39 @@
 
   function generateVerificationScriptForManual(lableValue,locatorName,ids,ele,newElement)
   {
-    var tab = ""
-    var tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
-    var tab2 = tab1 + tab1
-    var tab3 = tab1 + tab1 + tab1
+
     var needToAddVerify = "true"
+    updateTabValue()
 
     // Code for start For Loop
     if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
     {
-      // code for 
-      sessionStorage.setLoop = "continue"
+      //needToAddVerify = "false"
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "_data\" in data:" + "</br>"
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "_data'])):</br></br>"
       tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
       tab1 = tab + tab
       tab2 = tab1 + tab1
       tab3 = tab1 + tab1 + tab1   
-      tab = tab + tab  
-      needToAddVerify = "false"
-      //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-      //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "'])):</br></br>"
+      tab = tab + tab       
+
     }
+
     if(sessionStorage.setLoop && sessionStorage.setLoop == "continue")
     {
-      tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
-      tab1 = tab + tab
-      tab2 = tab1 + tab1
-      tab3 = tab1 + tab1 + tab1   
-      tab = tab + tab  
-      needToAddVerify = "false"      
+      //needToAddVerify = "false"      
     }
+    
 
     if(sessionStorage.endLoop && sessionStorage.endLoop == "true")
     {
       sessionStorage.setLoop = "false"
       sessionStorage.endLoop = "false"
-      tab = ""
-      tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
-      tab2 = tab1 + tab1
-      tab3 = tab1 + tab1 + tab1
     }
 
     if(newElement == "true")
     {
       needToAddVerify = "false" 
-      var currentElementEventType = getElementEventType(ele)
       sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
       sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
         // selenium command . like driver.find_element_by_id(self.lable).send_keys()
@@ -1621,16 +1832,14 @@
   
   if(needToAddVerify == "true")
   {
-    var currentElementEventType = getElementEventType(ele)
-
-  	// Code for Verify Logic
-  	var scriptVerify = helperForVerification(ids,lableValue,ele)
-  	if (scriptVerify!=null && scriptVerify.length > 0 )
-  	{ 
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" + lableValue + "\" in data:" + "</br>"
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
-  	}
+    // Code for Verify Logic
+    var scriptVerify = helperForVerification(ids,lableValue,ele)
+    if (scriptVerify!=null && scriptVerify.length > 0 )
+    { 
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" + lableValue + "\" in data:" + "</br>"
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
+    }
 
     //if(typeof(sessionStorage.pageName) != "undefined" && sessionStorage.pageName.length > 0 &&  (sessionStorage.previousPageName != sessionStorage.pageName))
     //{   
@@ -1642,41 +1851,44 @@
       //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
     //}
 
-  	//Code for operation
-  	// if "label" in data:
-  	if(ele.nodeName.toLowerCase().indexOf("input") == -1 && ele.nodeName.toLowerCase().indexOf("button") == -1 ) 
-  	{
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-  	    // selenium command . like driver.find_element_by_id(self.lable).send_keys()
-  		sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
-  	}
+    //Code for operation
+    // if "label" in data:
+    if(ele.nodeName.toLowerCase().indexOf("input") == -1 && ele.nodeName.toLowerCase().indexOf("button") == -1 ) 
+    {
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+        // selenium command . like driver.find_element_by_id(self.lable).send_keys()
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+    }
   }
 
 }
-   
-
-
-function generateOperationScriptForManual(lableValue,locatorName,ids,ele)
+ 
+function updateTabValue()
 {
-
-  var tab = ""
-  var tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
-  var tab2 = tab1 + tab1
-  var tab3 = tab1 + tab1 + tab1
+    tab = ""
+    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab2 = tab1 + tab1
+    tab3 = tab1 + tab1 + tab1
 
   // Code for start For Loop
   if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
   {
     // code for 
     //sessionStorage.setLoop = "continue"
-    sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "_data\" in data:" + "</br>"
-    sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "_data'])):</br></br>"
+    //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "_data\" in data:" + "</br>"
+    //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "_data'])):</br></br>"
     tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
     tab1 = tab + tab
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1   
     tab = tab + tab  
+
+
+    tab = ""
+    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab2 = tab1 + tab1
+    tab3 = tab1 + tab1 + tab1
 
   }
   if(sessionStorage.setLoop && sessionStorage.setLoop == "continue")
@@ -1698,41 +1910,63 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele)
     tab3 = tab1 + tab1 + tab1
   }
 
-  var currentElementEventType = getElementEventType(ele)
+}   
+
+
+function generateOperationScriptForManual(lableValue,locatorName,ids,ele)
+{
+
+  updateTabValue()
+  // Code for start For Loop
+  if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
+  {
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "_data\" in data:" + "</br>"
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "_data'])):</br></br>"
+    tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab1 = tab + tab
+    tab2 = tab1 + tab1
+    tab3 = tab1 + tab1 + tab1   
+    tab = tab + tab       
+ 
+  }
+  if(sessionStorage.endLoop && sessionStorage.endLoop == "true")
+  {
+    sessionStorage.setLoop = "false"
+    sessionStorage.endLoop = "false"
+  }
    
-   	// Code for Pop Up / Alert
- 	if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")	  
-      {
-          // Generate Alert code
-          sessionStorage.popUpInfo = "false"
-          sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateAlertCode()
-      }
+    // Code for Pop Up / Alert
+  if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")   
+  {
+    // Generate Alert code
+    sessionStorage.popUpInfo = "false"
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateAlertCode()
+  }
 
       //code for frame
- 	if(typeof(sessionStorage.currentFrame) != "undefined" && sessionStorage.currentFrame.length > 0 &&  (sessionStorage.previousFrame != sessionStorage.currentFrame))
- 	{	  
- 		  sessionStorage.previousFrame = sessionStorage.currentFrame
-	    sessionStorage.functionContentManual  = sessionStorage.functionContentManual  + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
-	    // For Verify 
-	    sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
-	}
+  if(typeof(sessionStorage.currentFrame) != "undefined" && sessionStorage.currentFrame.length > 0 &&  (sessionStorage.previousFrame != sessionStorage.currentFrame))
+  {   
+      sessionStorage.previousFrame = sessionStorage.currentFrame
+      sessionStorage.functionContentManual  = sessionStorage.functionContentManual  + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
+      // For Verify 
+      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
+  }
 
       
-	sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateWaitCommandHelper(ids,lableValue)
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateWaitCommandHelper(ids,lableValue)
 
-	  // Code for operation
-	  // if "label" in data:
-	sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-	 
-	  // selenium command . like driver.find_element_by_id(self.lable).send_keys()
-	sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+    // if "label" in data:
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+   
+    // selenium command . like driver.find_element_by_id(self.lable).send_keys()
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
 
-	  // for Select which have attribute like aria-owns
-	if(ele.hasAttribute("aria-owns") || locatorName.indexOf("aria-owns") != -1)
-	    sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//li[contains(.,' + data['" + lableValue + "']+')]\").click()" + "</br></br>"
+    // for Select which have attribute like aria-owns
+  if(ele.hasAttribute("aria-owns") || locatorName.indexOf("aria-owns") != -1)
+      sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//li[contains(.,' + data['" + lableValue + "']+')]\").click()" + "</br></br>"
 
-	if(ele.nodeName.toLowerCase().indexOf("select") != -1)
-	     sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//li[contains(.,' + data['" + lableValue + "']+')]\").click()" + "</br></br>"
+  if(ele.nodeName.toLowerCase().indexOf("select") != -1)
+       sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//li[contains(.,' + data['" + lableValue + "']+')]\").click()" + "</br></br>"
 
 }
    
@@ -1754,7 +1988,7 @@ function generateOperationScript(functionName, tempFunctionArray)
           var locatorName = tempFunctionArray[i][1]
           var ids = tempFunctionArray[i][2]
           var ele = tempFunctionArray[i][3]
-          var currentElementEventType = getElementEventType(ele)
+          var currentElementType = getElementEventType(ele)
  
       
 
@@ -1782,7 +2016,7 @@ function generateOperationScript(functionName, tempFunctionArray)
           functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" +lableValue + "\" in data:" + "</br>"
          
           // selenium command . like driver.find_element_by_id(self.lable).send_keys()
-          functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+          functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementType) + "</br></br>"
 
           // for Select which have attribute like aria-owns
           if(ele.hasAttribute("aria-owns") || locatorName.indexOf("aria-owns") != -1)
@@ -2046,8 +2280,9 @@ function generateVerificationScript(functionName, tempFunctionArray)
  
 function seleniumCommandHelper(identifierName,locator,EventType)
 {
+  console.log("In Sseleniuk EventType : " , EventType)
    var seleniumReferenceCommand  = {"byId" : "find_element_by_id" , "byName" : "find_element_by_name", "byXpath" : "find_element_by_xpath" ,"byXpathUsingContains" : "find_element_by_xpath" , "byXpathAttributes" : "find_element_by_xpath" , "byXpathPosition" : "find_element_by_xpath", "byDomIndex" : "find_element_by_xpath" , "byXpathHref" : "find_element_by_xpath" , "byXpathIdRelative" : "find_element_by_xpath" , "byXpathImg" : "find_element_by_xpath", "byXpathLink" : "find_elements_by_partial_link_text" , "byCss" : "find_elements_by_css_selector"}
-   var elementReferenceEvent = {"click" : "click()" , "keypress": "send_keys" , "mouseover": "click()","mousedown": "click()"}
+   var elementReferenceEvent = {"click" : "click()" , "keypress": "send_keys" , "keyup": "send_keys", "mouseover": "click()","mousedown": "click()"}
   
    if (elementReferenceEvent[EventType] == 'send_keys')
    { 
@@ -2220,12 +2455,18 @@ function getElementContainsLableHelper(elementToGenerateName)
        return parentParentParentChildrensCount;
  
     // NO match , then check for name and send the current element
-    if ( elementToGenerateName.name !=null &&  elementToGenerateName.name.length > 0 )
+    if (elementToGenerateName.name !=null &&  elementToGenerateName.name.length > 0 )
       return elementToGenerateName;
  
     // NO match , then check for id and send the current element
-   if ( elementToGenerateName.id !=null &&  elementToGenerateName.id.length > 0 )
+    if (elementToGenerateName.id !=null &&  elementToGenerateName.id.length > 0 )
       return elementToGenerateName;
+
+    // We can remove it if it does not work for others . Added this condition for Monitoring Spartan Page.
+    if(elementToGenerateName.previousElementSibling && elementToGenerateName.previousElementSibling.innerText.length > 0)
+       return elementToGenerateName.previousElementSibling;
+ 
+
   }
   //return null
   return null
@@ -2564,8 +2805,8 @@ function printScriptManual()
   script_window.document.write(scriptFunctionStart)
 
 
- 	// Code for Pop Up / Alert for Last 
- if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")	  
+  // Code for Pop Up / Alert for Last 
+ if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")    
   {
       // Generate Alert code
       sessionStorage.popUpInfo = "false"
@@ -2760,6 +3001,8 @@ function printDataFileForManual()
   if(sessionStorage.addNewScenario == "false")
   {
     data_window.document.write(dataFileStart)
+    var temp = '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>'
+    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual.replace(temp,"")
     sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
   }
   data_window.document.write(sessionStorage.dataDocumentContentManual) 
@@ -2847,8 +3090,8 @@ function generateDataFileForManual(labelName,elem)
     tab3 = tab1 + tab1 + tab1
   }
 
-      console.log("tab1  : " ,tab1)
-     sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + labelName + ": \""+ getElementValue(elem) +"\"</br>"
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + labelName + ": \""+ getElementValue(elem) +"\"</br>"
+
 }
  
 function updateDataFileForManual(elem)
@@ -2909,10 +3152,10 @@ function getElementValue(elementV)
         }
         if (elementNodeType == "select")
         {
-        	if(elementV.options[elementV.selectedIndex])
-            	return elementV.options[elementV.selectedIndex].text
+          if(elementV.options[elementV.selectedIndex])
+              return elementV.options[elementV.selectedIndex].text
             else
-            	return ""
+              return ""
         }
         else
         {
@@ -3110,7 +3353,7 @@ function printSpecFileForManual()
     '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, log, data["testCase"])</br>'+
     '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.failed("Exception Occured - %s" % e)</br></br></br>'
 
-	specDocumentContentStartManual =  specDocumentContentStartManual  +
+  specDocumentContentStartManual =  specDocumentContentStartManual  +
     '    &nbsp;&nbsp;# This is how to create a cleanup section</br>'+
     '    &nbsp;&nbsp;@aetest.cleanup</br>'+
     '    &nbsp;&nbsp;def clean_testcase(self):</br>'+
@@ -3157,7 +3400,7 @@ function generateSpecForManual()
     '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, log, data["testCase"])</br>'+
     '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.failed("Exception Occured - %s" % e)</br></br></br>'
 
-	sessionStorage.specDocumentContentForManual  =  sessionStorage.specDocumentContentForManual  +
+  sessionStorage.specDocumentContentForManual  =  sessionStorage.specDocumentContentForManual  +
     '    &nbsp;&nbsp;# This is how to create a cleanup section</br>'+
     '    &nbsp;&nbsp;@aetest.cleanup</br>'+
     '    &nbsp;&nbsp;def clean_testcase(self):</br>'+
@@ -3240,43 +3483,34 @@ function generateSpec()
 
 function elementChanged(custom)
 {
- if (previousElement != currentElement)
+if (currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.toLowerCase() != "body" && currentElement.nodeName.toLowerCase() != "li" && currentElement.nodeName.toLowerCase() != "image" && currentElement.nodeName.toLowerCase() != "circle" && currentElement.nodeName.toLowerCase() != "form" && isValidElement(currentElement))
   {
-    alreadyDisplayed = "no"
-    previousElement = currentElement
-    previousElementEventType = currentElementEventType
-  }
-  else
-  {
-      if (currentElementEventType == previousElementEventType )
-      {
-          alreadyDisplayed = "yes"
-      }
-      else
-      {
-        previousElementEventType = currentElementEventType
-        alreadyDisplayed = "no"
-      }
- 
-  }
-
-  if (alreadyDisplayed == "no" && currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.toLowerCase() != "body" && currentElement.nodeName.toLowerCase() != "li" && currentElement.nodeName.toLowerCase() != "image" && currentElement.nodeName.toLowerCase() != "circle" && currentElement.nodeName.toLowerCase() != "form" && isValidElement(currentElement))
-  {
-    elementIDs  = findAllPossibleLocator(currentElement,custom)
-    preferedID = preferedLocator(elementIDs,currentElement)
-    console.log("elementIDs : " , Object.values(preferedID)[0])
-    console.log("elementIDs : " , elementIDs)
-    console.log("preferedID : " , preferedID)
-    console.log("sessionStorage.setRecordVerify : " , sessionStorage.setRecordVerify)
-    if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "true")
+   if (previousElement != currentElement)
     {
-    	printHTMLBodyForManualVerification(window_handle,preferedID,currentElementEventType,currentElement,custom)
+      previousElement = currentElement
+      previousElementEventType = currentElementEventType
+      elementIDs  = findAllPossibleLocator(currentElement,custom)
+      preferedID = preferedLocator(elementIDs,currentElement)
+      console.log("elementIDs : " , Object.values(preferedID)[0])
+      console.log("elementIDs : " , elementIDs)
+      console.log("preferedID : " , preferedID)
+      console.log("sessionStorage.setRecordVerify : " , sessionStorage.setRecordVerify)
+      if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "true")
+        printHTMLBodyForManualVerification(window_handle,preferedID,currentElementEventType,currentElement,custom)
+      else
+        printHTMLBody(window_handle,preferedID,currentElementEventType,currentElement,custom)
     }
     else
-    {
-    	printHTMLBody(window_handle,preferedID,currentElementEventType,currentElement,custom)
+    {    
+      elementIDs  = findAllPossibleLocator(currentElement,custom)
+      preferedID = preferedLocator(elementIDs,currentElement)
+      console.log("elementIDs : " , Object.values(preferedID)[0])
+      console.log("elementIDs : " , elementIDs)
+      console.log("preferedID : " , preferedID)
+      updateHTMLBody(window_handle,preferedID,currentElementEventType,currentElement,custom)
+      previousElementEventType = currentElementEventType
+
     }
-    alreadyDisplayed = "yes"
   }
 }
 
@@ -3285,7 +3519,7 @@ function isValidElement(ele)
   if(ele.innerText)
   {
     // If the clicked element contain multiple line , then dont allow it 
-    a = ele.innerText.replace(/^\s+|\s+$/g, "")
+    a = ele.textContent.replace(/^\s+|\s+$/g, "")
     if (a.indexOf("\n") == -1)
       return true
     else
@@ -3300,7 +3534,7 @@ function contextMenuChanged(custom)
 {
   if(currentContextElement && currentContextElement.nodeName.toLowerCase() != "html" && currentContextElement.nodeName.toLowerCase() != "li")
     {
-      if(sessionStorage.setVerify == "true"  || sessionStorage.setTime == "true") 
+      if(sessionStorage.setVerify == "true"  || sessionStorage.setTime5 == "true" || sessionStorage.setTime10 == "true") 
       {
         elementIDs  = findAllPossibleLocator(currentContextElement,custom)
         preferedID = preferedLocator(elementIDs,currentContextElement)
@@ -3985,7 +4219,7 @@ function addEventsToAllFrames()
       if (typeof(elem.keypressEvent) == "undefined")
       {
           elem.keypressEvent = "true"
-          elem.addEventListener('keypress', handler);
+          elem.addEventListener('keyup', handler);
       }
 
       if (typeof(elem.mousedownEvent) == "undefined")
@@ -4005,7 +4239,7 @@ function addEventsToAllFrames()
           elem.mousemoveEvent = "true"
           elem.addEventListener('mousemove', mousemoveEventHandler);
       }
-	
+  
     }
     var s = document.createElement('script');
     //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
@@ -4017,7 +4251,7 @@ function addEventsToAllFrames()
   if (typeof(elem.keypressEvent) == "undefined")
   {
       elem.keypressEvent = "true"
-      elem.addEventListener('keypress', handler);
+      elem.addEventListener('keyup', handler);
   }
 
   if (typeof(elem.mousedownEvent) == "undefined")
@@ -4062,7 +4296,7 @@ function ManualBuild()
 
   // Code for warning message when user refresh the page  
 //  window.onbeforeunload = function() {
- // 		console.log("Relaoded again .. ")
+ //     console.log("Relaoded again .. ")
         //return "Dude, are you sure you want to leave? Think of the kittens!";
   //  }
   // Code for Frame window 
@@ -4075,26 +4309,42 @@ function ManualBuild()
 
 function handler(event) 
  {
-    currentElementEventType = event.type
-    currentElement = event.srcElement ;
-    console.log("currentElement : " , currentElement)
-    // get the page name
-    var baseUrl = event.srcElement.baseURI.toLowerCase();
-    generatePageName(baseUrl)
-    currentPageAddress = baseUrl.substring((baseUrl.lastIndexOf("#") + 1))
-    //console.log("Name : " ,event.view.name )
-    sessionStorage.currentFrame = event.view.name
-    elementChanged(event.view.document)
-    // For Tab Issue 
-    updateDataFileForManual(currentElement)
-    window.onbeforeunload = function() {
-	    setTimeout(function(){                 
-               addEventsToAllFrames()
-                      //console.log("Wait 500 mili seconds")
-                    },500);
-  		console.log("Relaoded again .. ")
+    if(isValidElement(event.srcElement))
+    {
+      // Code for Tab
+      if(event.keyCode && event.keyCode == "9")
+        currentElementEventType = "click"
+      else
+        currentElementEventType = event.type
+
+
+      currentElement = event.srcElement;
+      console.log("currentElement : " , currentElement)
+      console.log("currentElementEventType : " , currentElementEventType)
+
+      // get the page name
+      var baseUrl = event.srcElement.baseURI.toLowerCase();
+      generatePageName(baseUrl)
+      currentPageAddress = baseUrl.substring((baseUrl.lastIndexOf("#") + 1))
+      //console.log("Name : " ,event.view.name )
+      sessionStorage.currentFrame = event.view.name
+      elementChanged(event.view.document)
+      // For Tab Issue 
+      updateDataFileForManual(currentElement)
+      window.onbeforeunload = function() {
+        setTimeout(function(){                 
+                 addEventsToAllFrames()
+                        //console.log("Wait 500 mili seconds")
+                      },500);
+        console.log("Relaoded again .. ")
+      }      
     }
-  }
+    else
+    {
+      console.log("Not a valid element to process")
+      console.log(event.srcElement)
+    }
+ }
 
 function contextmenuEventHandler(event) 
 {
@@ -4110,7 +4360,9 @@ function mousemoveEventHandler(event)
       sessionStorage.pageName = userDefinedClassName
     
     contextMenuChanged(event.view.document)
-    updateDataFileForManual(currentElement)
+    //if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify != "true")
+      updateDataFileForManual(currentElement)
+
 }
 
 function checkIsIPV4(entry) {
@@ -4125,34 +4377,40 @@ function checkIsIPV4(entry) {
 
 function generatePageName(baseUrl) 
 {
-	sessionStorage.pageName  = (baseUrl.split("/"))[baseUrl.split("/").length -1]
-	if (isValidMacAddress(sessionStorage.pageName))
-	{
-		sessionStorage.pageName = (baseUrl.split("/"))[baseUrl.split("/").length - 2]
-	}
+  sessionStorage.pageName  = (baseUrl.split("/"))[baseUrl.split("/").length -1]
+  if (isValidMacAddress(sessionStorage.pageName))
+  {
+    sessionStorage.pageName = (baseUrl.split("/"))[baseUrl.split("/").length - 2]
+  }
 
-	if(sessionStorage.pageName.indexOf(".html") != -1)
-		sessionStorage.pageName = sessionStorage.pageName.replace(".html", "")
+  if(sessionStorage.pageName.indexOf(".html") != -1)
+    sessionStorage.pageName = sessionStorage.pageName.replace(".html", "")
 
-	if(sessionStorage.pageName.length > 15 || sessionStorage.pageName.length == 0)
-	{
-		var page = (baseUrl.split("/"))
-		page = page.filter(function(e){return e});
-		sessionStorage.pageName = page[1]
-		if (checkIsIPV4(sessionStorage.pageName))
-			sessionStorage.pageName = "Address_" + sessionStorage.pageName
-		sessionStorage.pageName = sessionStorage.pageName.replace(/\./g,"_")
-	}
+  if(sessionStorage.pageName.length > 15 || sessionStorage.pageName.length == 0)
+  {
+    var page = (baseUrl.split("/"))
+    page = page.filter(function(e){return e});
+    sessionStorage.pageName = page[1]
+    if (checkIsIPV4(sessionStorage.pageName))
+      sessionStorage.pageName = "Address_" + sessionStorage.pageName
+    sessionStorage.pageName = sessionStorage.pageName.replace(/\./g,"_")
+  }
 
-	if(sessionStorage.pageName.length == 0)
-		sessionStorage.pageName = "NotAbleToIdentifyPageName"
+  if(sessionStorage.pageName.length == 0)
+    sessionStorage.pageName = "NotAbleToIdentifyPageName"
 
-	console.log("sessionStorage.pageName : " ,sessionStorage.pageName)
+  var userDefinedClassName = window_handle.document.getElementById("userDefinedClassName").value;
+  if(userDefinedClassName && userDefinedClassName.length > 0)
+    sessionStorage.pageName = userDefinedClassName
+
+
+  console.log("sessionStorage.pageName : " ,sessionStorage.pageName)
 
 }
 
 AutoBuild()
 
 //ManualBuild()
+ 
  
 })(); 

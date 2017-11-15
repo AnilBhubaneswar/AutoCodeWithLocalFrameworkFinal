@@ -861,7 +861,7 @@
     for (var ids in elementIDs)
     {
    
-      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
       if (lableValue == null)
       {
         lableValue = "NotAbleToIdentify"
@@ -879,7 +879,7 @@
       cell.innerHTML = elementIDs[ids];
       var cell = row.insertCell (2);
 
-      cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+      cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom.view.document);
       var cell = row.insertCell (3);
       cell.innerHTML = currentPageAddress;
 
@@ -901,7 +901,7 @@
       //locatorDocumentContent = locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+elementIDs[ids]+"\"</br>"
       sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
 
-      generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
+      generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,custom)
       generateDataFileForManual(lableValue,actualEle)    
       //generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true")
       
@@ -967,7 +967,6 @@
         var cell = row.insertCell (1);
         cell.innerHTML = elementIDs[ids];
         var cell = row.insertCell (2);
-        //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
         cell.innerHTML = "Verification Code"
         var cell = row.insertCell (3);
         cell.innerHTML = currentPageAddress;
@@ -994,11 +993,11 @@
           var cell = row.insertCell (1);
           cell.innerHTML = elementIDs[ids];
           var cell = row.insertCell (2);
-          cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+          cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom.view.document);
           var cell = row.insertCell (3);
           cell.innerHTML = currentPageAddress;
 
-          generateOperationScriptForManual(lableValue,elementIDs[ids],ids,currentElement)
+          generateOperationScriptForManual(lableValue,elementIDs[ids],ids,currentElement,custom)
 
       }
       //generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle)
@@ -1095,7 +1094,7 @@ function getElementFromList(lableValue, locatorName)
     for (var ids in elementIDs)
     {
    
-      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
+      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
       if (lableValue == null)
       {
       lableValue = "NotAbleToIdentify"
@@ -1127,7 +1126,7 @@ function getElementFromList(lableValue, locatorName)
         var cell = row.insertCell (1);
         cell.innerHTML = elementIDs[ids];
         var cell = row.insertCell (2);
-        cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+        cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom.view.document);
         var cell = row.insertCell (3);
         cell.innerHTML = currentPageAddress;
 
@@ -1756,8 +1755,24 @@ function getElementFromList(lableValue, locatorName)
       functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert = driver.switch_to_alert()"  + "</br>"
       functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert_message = alert.text"  + "</br>"
       functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"log.info(alert_message)"  + "</br>"
-      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"#self.assert_equal(data[\"message\"], alert_message, \"Pop up message miss match\", \"Pop up message match\")"  + "</br>"    
+      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"self.assert_equal(data[\"message\"], alert_message, \"Pop up message miss match\", \"Pop up message match\")"  + "</br>"    
       functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert.accept()"  + "&nbsp;&nbsp;&nbsp;&nbsp;</br>"
+      return functionContent
+
+  }
+
+  function generateConfirmCode(flag)
+  {
+      var functionContent= ""
+      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert = driver.switch_to_alert()"  + "</br>"
+      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert_message = alert.text"  + "</br>"
+      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"log.info(alert_message)"  + "</br>"
+      functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"self.assert_equal(data[\"message\"], alert_message, \"Pop up message miss match\", \"Pop up message match\")"  + "</br>"
+      if(flag == "true")    
+        functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert.accept()"  + "&nbsp;&nbsp;&nbsp;&nbsp;</br>"
+      else
+        functionContent = functionContent +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"alert.dismiss()"  + "&nbsp;&nbsp;&nbsp;&nbsp;</br>"
+
       return functionContent
 
   }
@@ -1794,6 +1809,24 @@ function getElementFromList(lableValue, locatorName)
 
     var needToAddVerify = "true"
     updateTabValue()
+
+    //code for frame
+    if(typeof(sessionStorage.currentFrame) != "undefined" && sessionStorage.currentFrame.length > 0 &&  (sessionStorage.previousFrame != sessionStorage.currentFrame))
+    {   
+        var allParentFrameNames = getAllParentFrames(custom)
+        var functionContent = tab +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.default_content()"  + "</br>"
+        for (var i = 0; i < allParentFrameNames.length; i++)
+        {
+          functionContent = functionContent + tab + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.frame(\"" + allParentFrameNames[i] + "\")"  + "</br>"        
+        }
+        functionContent = functionContent + tab + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.frame(\"" + sessionStorage.currentFrame + "\")"  + "</br>"    
+
+        sessionStorage.previousFrame = sessionStorage.currentFrame
+        // For Verify 
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + functionContent
+
+    }
+
 
     // Code for start For Loop
     if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
@@ -1913,7 +1946,7 @@ function updateTabValue()
 }   
 
 
-function generateOperationScriptForManual(lableValue,locatorName,ids,ele)
+function generateOperationScriptForManual(lableValue,locatorName,ids,ele,custom)
 {
 
   updateTabValue()
@@ -1936,20 +1969,47 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele)
   }
    
     // Code for Pop Up / Alert
-  if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")   
+  if(typeof(sessionStorage.alert) != "undefined" && sessionStorage.alert == 'true')   
   {
     // Generate Alert code
-    sessionStorage.popUpInfo = "false"
+    sessionStorage.alert = "false"
     sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateAlertCode()
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + "message" + ": \""+ sessionStorage.alert_message +"\"</br>"
+
+  }
+
+
+  if(typeof(sessionStorage.confirm) != "undefined" && sessionStorage.confirm == 'true')   
+  {
+    // Generate Alert code
+    sessionStorage.confirm = "false"
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateConfirmCode(sessionStorage.confirm_status)
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + "message" + ": \""+ sessionStorage.confirm_message +"\"</br>"
+
   }
 
       //code for frame
   if(typeof(sessionStorage.currentFrame) != "undefined" && sessionStorage.currentFrame.length > 0 &&  (sessionStorage.previousFrame != sessionStorage.currentFrame))
   {   
+      var allParentFrameNames = getAllParentFrames(custom)
+
+      var functionContent = tab +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.default_content()"  + "</br>"
+      for (var i = 0; i < allParentFrameNames.length; i++)
+      {
+        functionContent = functionContent + tab + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.frame(\"" + allParentFrameNames[i] + "\")"  + "</br>"        
+      }
+      functionContent = functionContent + tab + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +"driver.switch_to.frame(\"" + sessionStorage.currentFrame + "\")"  + "</br>"    
+
       sessionStorage.previousFrame = sessionStorage.currentFrame
-      sessionStorage.functionContentManual  = sessionStorage.functionContentManual  + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
+      //sessionStorage.functionContentManual  = sessionStorage.functionContentManual  + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
       // For Verify 
-      sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
+      //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab + generateFrameSwitchCode(sessionStorage.currentFrame)
+
+
+      sessionStorage.functionContentManual  = sessionStorage.functionContentManual  + functionContent
+      // For Verify 
+      //sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + functionContent
+
   }
 
       
@@ -2461,10 +2521,6 @@ function getElementContainsLableHelper(elementToGenerateName)
     // NO match , then check for id and send the current element
     if (elementToGenerateName.id !=null &&  elementToGenerateName.id.length > 0 )
       return elementToGenerateName;
-
-    // We can remove it if it does not work for others . Added this condition for Monitoring Spartan Page.
-    if(elementToGenerateName.previousElementSibling && elementToGenerateName.previousElementSibling.innerText.length > 0)
-       return elementToGenerateName.previousElementSibling;
  
 
   }
@@ -2569,23 +2625,20 @@ function generateLocatorNameHelper(locator,custom)
             return forElement.id.trim() + tab
  
       }
-      else
-      {
-         forElement = elementToGenerateName
-         if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").length  > 0)
-            return forElement.getAttribute("for").trim() + tab        
-         if (forElement.title !=null && forElement.title.length  > 0)
-            return forElement.title.trim() + tab
-         if (forElement.value !=null && forElement.value.length  > 0)
-            return forElement.value.trim() + tab
-         if (forElement.name !=null  && forElement.name.length  > 0)
-            return forElement.name.trim() + tab
-         if (forElement.id !=null  && forElement.id.length  > 0)
-            return forElement.id.trim() + tab
-         if (forElement.innerText !=null  && forElement.innerText.length  > 0)
-            return forElement.innerText.trim() + tab
+       forElement = elementToGenerateName
+       if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").length  > 0)
+          return forElement.getAttribute("for").trim() + tab        
+       if (forElement.title !=null && forElement.title.length  > 0)
+          return forElement.title.trim() + tab
+       if (forElement.name !=null  && forElement.name.length  > 0)
+          return forElement.name.trim() + tab
+       if (forElement.id !=null  && forElement.id.length  > 0)
+          return forElement.id.trim() + tab
+       if (forElement.value !=null && forElement.value.length  > 0)
+          return forElement.value.trim() + tab
+       if (forElement.innerText !=null  && forElement.innerText.length  > 0)
+          return forElement.innerText.trim() + tab
  
-      }
     }
   return null
 }
@@ -2805,13 +2858,26 @@ function printScriptManual()
   script_window.document.write(scriptFunctionStart)
 
 
-  // Code for Pop Up / Alert for Last 
- if(typeof(sessionStorage.popUpInfo) != "undefined" && sessionStorage.popUpInfo == "true")    
+  // Code for Pop Up / Alert
+  if(typeof(sessionStorage.alert) != "undefined" && sessionStorage.alert == 'true')   
   {
-      // Generate Alert code
-      sessionStorage.popUpInfo = "false"
-      sessionStorage.functionContentManual = sessionStorage.functionContentManual + generateAlertCode()
+    // Generate Alert code
+    sessionStorage.alert = "false"
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateAlertCode()
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + "message" + ": \""+ sessionStorage.alert_message +"\"</br>"
+
   }
+
+
+  if(typeof(sessionStorage.confirm) != "undefined" && sessionStorage.confirm == 'true')   
+  {
+    // Generate Alert code
+    sessionStorage.confirm = "false"
+    sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateConfirmCode(sessionStorage.confirm_status)
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + "message" + ": \""+ sessionStorage.confirm_message +"\"</br>"
+
+  }
+
 
   sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info(\"****** Operation Completed *****\")</br></br>","")
   sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "log.info(\"****** Operation Completed *****\")" + "</br></br>"
@@ -3142,6 +3208,8 @@ function getElementValue(elementV)
        {
           elementType = elementV.type
           if (elementType == 'text')
+              return elementV.value
+          if (elementType == 'password')
               return elementV.value
           if (elementType == 'submmit')
               return "Yes"
@@ -3489,7 +3557,7 @@ if (currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.t
     {
       previousElement = currentElement
       previousElementEventType = currentElementEventType
-      elementIDs  = findAllPossibleLocator(currentElement,custom)
+      elementIDs  = findAllPossibleLocator(currentElement,custom.view.document)
       preferedID = preferedLocator(elementIDs,currentElement)
       console.log("elementIDs : " , Object.values(preferedID)[0])
       console.log("elementIDs : " , elementIDs)
@@ -3502,7 +3570,7 @@ if (currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.t
     }
     else
     {    
-      elementIDs  = findAllPossibleLocator(currentElement,custom)
+      elementIDs  = findAllPossibleLocator(currentElement,custom.view.document)
       preferedID = preferedLocator(elementIDs,currentElement)
       console.log("elementIDs : " , Object.values(preferedID)[0])
       console.log("elementIDs : " , elementIDs)
@@ -4200,95 +4268,74 @@ var previousFrame = ""
 
 function addEventsToAllFrames()
 {
-  
-  // Code for Frame window 
   allFrames = findAllWindow()
-  //console.info("All Frames : " , allFrames)
-  if (Object.values(allFrames).length > 0)
-  {
-    for(var i=0;i<Object.values(allFrames).length;i++)
-    {
+  if (Object.values(allFrames).length > 0){
+    for(var i=0;i<Object.values(allFrames).length;i++){
       var frameWindow = Object.values(allFrames)[i]
-      //frameWindow.alert = function () 
-      //{ 
-        //sessionStorage.popUpInfo = "true"
-        //return true 
-      //}
-
       var elem = frameWindow.document.documentElement;
-      if (typeof(elem.keypressEvent) == "undefined")
-      {
+      if (typeof(elem.keypressEvent) == "undefined"){
           elem.keypressEvent = "true"
           elem.addEventListener('keyup', handler);
       }
-
-      if (typeof(elem.mousedownEvent) == "undefined")
-      {
+      if (typeof(elem.mousedownEvent) == "undefined"){
           elem.mousedownEvent = "true"
           elem.addEventListener('mousedown', handler);
       }
-
-      if (typeof(elem.contextmenuEvent) == "undefined")
-      {
+      if (typeof(elem.contextmenuEvent) == "undefined"){
           elem.contextmenuEvent = "true"
           elem.addEventListener('contextmenu', contextmenuEventHandler);
-      }
-      
-      if (typeof(elem.mousemoveEvent) == "undefined")
-      {
+      }      
+      if (typeof(elem.mousemoveEvent) == "undefined"){
           elem.mousemoveEvent = "true"
           elem.addEventListener('mousemove', mousemoveEventHandler);
       }
-  
-    }
-    var s = document.createElement('script');
-    //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
-    s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';console.log('alert Present')}"
-    document.body.appendChild(s);
+      if(frameWindow && frameWindow.document && frameWindow.document.body){
+          var s = frameWindow.document.createElement('script');
+          //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
+          s.innerHTML = "(function() {var _old_alert = window.alert;window.alert = function() {_old_alert.apply(window,arguments);console.log('alert message : ' , arguments[0]);sessionStorage.alert = 'true';sessionStorage.alert_message = arguments[0];console.log('alert Present')};})();"
+          frameWindow.document.body.appendChild(s);
+
+
+
+          var s = frameWindow.document.createElement('script');
+          //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
+          s.innerHTML = "(function() {var _old_confirm = window.confirm;window.confirm = function() {var flag = _old_confirm.apply(window,arguments);console.log('Flag Value :', flag);console.log('Message Value :', arguments[0]);sessionStorage.confirm = 'true';sessionStorage.confirm_message = arguments[0];sessionStorage.confirm_status= flag;};})();"
+          frameWindow.document.body.appendChild(s);
+      }
+  }
   }
 
   var elem = window.document.documentElement;
-  if (typeof(elem.keypressEvent) == "undefined")
-  {
+  if (typeof(elem.keypressEvent) == "undefined"){
       elem.keypressEvent = "true"
       elem.addEventListener('keyup', handler);
   }
-
-  if (typeof(elem.mousedownEvent) == "undefined")
-  {
+  if (typeof(elem.mousedownEvent) == "undefined"){
       elem.mousedownEvent = "true"
       elem.addEventListener('mousedown', handler);
   }
-
-  if (typeof(elem.contextmenuEvent) == "undefined")
-  {
+  if (typeof(elem.contextmenuEvent) == "undefined"){
       elem.contextmenuEvent = "true"
       elem.addEventListener('contextmenu', contextmenuEventHandler);
   }
-
-  if (typeof(elem.mousemoveEvent) == "undefined")
-  {
+  if (typeof(elem.mousemoveEvent) == "undefined"){
       elem.mousemoveEvent = "true"
       elem.addEventListener('mousemove', mousemoveEventHandler);
   }
 
-  //var elem = window.document.documentElement;
-  //elem.addEventListener('keypress', handler);
-  //elem.addEventListener('mousedown', handler);
-  //window.confirm = function () 
-  //{ 
-    //return true 
-  //}
-  //window.alert = function () 
-  //{ 
-    //sessionStorage.popUpInfo = "true"
-    //return true 
-  //}
+
   var s = document.createElement('script');
   //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
-  s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';console.log('alert Present')}"
+  s.innerHTML = "(function() {var _old_alert = window.alert;window.alert = function() {_old_alert.apply(window,arguments);console.log('alert message : ' , arguments[0]);sessionStorage.alert = 'true';sessionStorage.alert_message = arguments[0];console.log('alert Present')};})();"
   document.body.appendChild(s);
-  
+
+
+
+  var s = document.createElement('script');
+  //s.innerHTML = "alert = function(){sessionStorage.popUpInfo = 'true';return true}"
+  s.innerHTML = "(function() {var _old_confirm = window.confirm;window.confirm = function() {var flag = _old_confirm.apply(window,arguments);console.log('Flag Value :', flag);console.log('Message Value :', arguments[0]);sessionStorage.confirm = 'true';sessionStorage.confirm_message = arguments[0];sessionStorage.confirm_status= flag;};})();"
+  document.body.appendChild(s);
+
 }
 
 function ManualBuild()
@@ -4328,7 +4375,7 @@ function handler(event)
       currentPageAddress = baseUrl.substring((baseUrl.lastIndexOf("#") + 1))
       //console.log("Name : " ,event.view.name )
       sessionStorage.currentFrame = event.view.name
-      elementChanged(event.view.document)
+      elementChanged(event)
       // For Tab Issue 
       updateDataFileForManual(currentElement)
       window.onbeforeunload = function() {
@@ -4408,9 +4455,20 @@ function generatePageName(baseUrl)
 
 }
 
-AutoBuild()
+//AutoBuild()
 
-//ManualBuild()
- 
+ManualBuild()
+
+function getAllParentFrames(custom)
+{
+  var names  = new Array()
+  while(custom && custom.view && custom.view.parent && custom.view.parent.name.length > 0 )
+  {
+    names.push(custom.view.parent.name)
+    custom = custom.view.parent
+  }
+  console.log(names)
+  return names
+} 
  
 })(); 

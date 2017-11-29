@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   	localStorage.operation = "ManualBuildStart";
 	
 	chrome.tabs.getSelected(null, function(tab) {
-  			var code = 'window.location.reload();';
+  			var code = 'window.location.reload();localStorage.url=window.location.href;';
         localStorage.tabID = tab.id
   			chrome.tabs.executeScript(tab.id, {code: code});
 		});	
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   	localStorage.operation = "ManualBuildStop";
 
   chrome.tabs.getSelected(null, function(tab) {
-        var code = 'sessionStorage.clear();';
+        var code = 'sessionStorage.clear();localStorage.clear();';
         localStorage.tabID = tab.id
         chrome.tabs.executeScript(tab.id, {code: code});
     }); 

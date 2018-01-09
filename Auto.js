@@ -597,6 +597,7 @@ function getNearestTableAncestor(htmlElementNode) {
       locatorForTable = byXpath(parentTable,custom)
       tdPosition = relativeXPathFromParent(el,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"
       var xpathText = ""
       for(var i=0;i<el.parentNode.childElementCount;i++)
       {
@@ -622,6 +623,7 @@ function getNearestTableAncestor(htmlElementNode) {
       parentTable = getNearestTableAncestor(el)
       locatorForTable = byXpath(parentTable,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"
 
       var xpathText = ""
       for(var i=0;i<el.childElementCount;i++)
@@ -651,6 +653,7 @@ function getNearestTableAncestor(htmlElementNode) {
       trPosition = relativeXPathFromParent(el.parentNode.parentNode,custom)
       tdPosition = relativeXPathFromParent(el.parentNode,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"      
       if(el.innerText && el.innerText.length > 0)
       {
         var xpathText = ""
@@ -927,7 +930,7 @@ function getNearestTableAncestor(htmlElementNode) {
     if(/^\d/.test(lableValue))
        lableValue = sessionStorage.pageName + lableValue
 
-    return lableValue
+    return sessionStorage.pageName + "_" + lableValue
 
   }
 
@@ -1000,7 +1003,8 @@ function printHTMLBodyConfirm(lableValue,message,flag)
     {
    
       lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
-      if (lableValue == null)
+      console.log("lableValue : " , lableValue)
+      if (lableValue == null || lableValue.trim().length == 0)
       {
         lableValue = "NotAbleToIdentify"
       }
@@ -1039,14 +1043,13 @@ function printHTMLBodyConfirm(lableValue,message,flag)
       modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
 
       // For table row / column identificatin using identifier 
-      if(ids == "byXpathUsingContains")
+      if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
       {
           sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
       }
       else
       {
-          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
-  
+          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"  
       }  
       generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,custom)
       generateDataFileForManual(lableValue,actualEle)    
@@ -1226,7 +1229,7 @@ function getElementFromList(lableValue, locatorName)
     for (var ids in elementIDs)
     {
       lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
-      if (lableValue == null)
+      if (lableValue == null || lableValue.trim().length > 0)
       {
       lableValue = "NotAbleToIdentify"
       }
@@ -1269,7 +1272,7 @@ function getElementFromList(lableValue, locatorName)
         modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
        
         // For table row / column identificatin using identifier 
-        if(ids == "byXpathUsingContains")
+        if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
         {
             sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
         }
@@ -1317,7 +1320,7 @@ function getElementFromList(lableValue, locatorName)
     {
    
       lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
-      if (lableValue == null)
+      if (lableValue == null || lableValue.trim().length > 0)
       {
         lableValue = "NotAbleToIdentify"
       }
@@ -2006,7 +2009,7 @@ function getElementFromList(lableValue, locatorName)
     if(newElement == "true")
     {
         //If new Element during verification then add this condition
-        if(ids == "byXpathUsingContains")
+      if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
         {
           //updateTabValue()
           sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
@@ -2147,7 +2150,7 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele,custom)
   }
 
   // For table row / column identificatin using identifier 
-  if(ids == "byXpathUsingContains")
+  if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
   {
     //updateTabValue()
     sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
@@ -2504,7 +2507,7 @@ function seleniumCommandHelper(identifierName,locator,EventType)
 function helperForVerification(identifierName,locator,elementID)
 {
    var seleniumReferenceCommand  = {"byId" : "find_element_by_id" , "byName" : "find_element_by_name", "byXpath" : "find_element_by_xpath" ,"byXpathUsingContains" : "find_element_by_xpath" , "byXpathAttributes" : "find_element_by_xpath" , "byXpathPosition" : "find_element_by_xpath", "byDomIndex" : "find_element_by_xpath" , "byXpathHref" : "find_element_by_xpath" , "byXpathIdRelative" : "find_element_by_xpath" , "byXpathImg" : "find_element_by_xpath", "byXpathLink" : "find_elements_by_partial_link_text" , "byCss" : "find_elements_by_css_selector"}
-   var elementNodeTypeVerify = {"span" : "text" ,"div" : "text", "text": "get_attribute(\"value\")" ,"textarea": "get_attribute(\"value\")" , "submit": "click()" , "checkbox": "is_selected()","radio": "is_selected()","table" : "text"}
+   var elementNodeTypeVerify = {"span" : "text" ,"li" : "text" ,"option" : "text" ,"div" : "text", "text": "get_attribute(\"value\")" ,"textarea": "get_attribute(\"value\")" , "submit": "click()" , "checkbox": "is_selected()","radio": "is_selected()","table" : "text"}
    var seleniumCommandVerify = ""
   
    var typeOfElement = ""
@@ -2512,7 +2515,7 @@ function helperForVerification(identifierName,locator,elementID)
    if (elementV != null)
    {
      elementNodeType = elementV.nodeName.toLowerCase()    
-     if (elementNodeType == "span" || elementNodeType == "div" )
+     if (elementNodeType == "span" || elementNodeType == "div" || elementNodeType == "li"  || elementNodeType == "option")
      {
           seleniumCommandVerify = seleniumCommandVerify +
           "self.assert_equal(str(driver." +seleniumReferenceCommand[identifierName]+"(self."+ locator +")."+
@@ -2733,7 +2736,6 @@ function checkChildElementContainAttribute(elementToCheck,attName)
 {
   if (elementToCheck!= null)
   {
-
       // own check 
       //check if this element  is a label
       ownCheck = elementContainAttribute(elementToCheck,attName)
@@ -2804,19 +2806,19 @@ function generateLocatorNameHelper(locator,custom)
             return forElement.id.trim() + tab
  
       }
-       forElement = elementToGenerateName
-       if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").trim().length  > 0)
-          return forElement.getAttribute("for").trim() + tab        
-       if (forElement.title !=null && forElement.title.trim().length  > 0)
-          return forElement.title.trim() + tab
-       if (forElement.name !=null  && forElement.name.trim().length  > 0)
-          return forElement.name.trim() + tab
-       if (forElement.id !=null  && forElement.id.trim().length  > 0)
-          return forElement.id.trim() + tab
-       if (forElement.value !=null && forElement.value.trim().length  > 0)
-          return forElement.value.trim() + tab
-       if (forElement.innerText !=null  && forElement.innerText.trim().length  > 0)
-          return forElement.innerText.trim() + tab
+     forElement = elementToGenerateName
+     if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").trim().length  > 0)
+        return forElement.getAttribute("for").trim() + tab        
+     if (forElement.title !=null && forElement.title.trim().length  > 0)
+        return forElement.title.trim() + tab
+     if (forElement.name !=null  && forElement.name.trim().length  > 0)
+        return forElement.name.trim() + tab
+     if (forElement.id !=null  && forElement.id.trim().length  > 0)
+        return forElement.id.trim() + tab
+     if (forElement.value !=null && forElement.value.trim().length  > 0)
+        return forElement.value.trim() + tab
+     if (forElement.innerText !=null  && forElement.innerText.trim().length  > 0)
+        return forElement.innerText.trim() + tab
  
     }
   return null
@@ -3415,6 +3417,7 @@ function printLib()
   tab4 + '                raise'+ "<br>" +
   tab1 + '        self.driver.get(url)'+ "<br>" +
   tab1 + '        self.driver.maximize_window();'+ "<br>" +
+  tab1 + '        self.driver.implicitly_wait(5) # seconds'+ "<br>" +
   tab1 + '        return self.driver'+ "<br>" + "<br>" +
   tab + ''+ "<br>" +
   tab + '    def load_data(self, fileName, driver=None):'+ "<br>" +
@@ -4996,6 +4999,8 @@ function ManualBuild()
 
   // Code for Frame window 
   addEventsToAllFrames()
+
+  sessionStorage.pageName = "DemoClass"
   
   // Code for display Window
   window_handle = printHTMLHeaderForManual()
@@ -5004,7 +5009,7 @@ function ManualBuild()
 
 function handler(event) 
  {
-    console.log("Hii : " , event)
+    //console.log("Hii : " , event)
     if(event && event.view && isValidElement(event.srcElement))
     {
       // Code for Tab
@@ -5049,6 +5054,9 @@ function handler(event)
       console.log(event.srcElement)
       currentElement = undefined
     }
+
+    // clean up section
+    sessionStorage.UsingbyXpathUsingContains = ""
  }
 
 function contextmenuEventHandler(event) 
@@ -5139,9 +5147,9 @@ function generatePageName(baseUrl)
 
 }
 
-//AutoBuild()
+AutoBuild()
 
-ManualBuild()
+//ManualBuild()
 
 function getAllParentFrames(custom)
 {

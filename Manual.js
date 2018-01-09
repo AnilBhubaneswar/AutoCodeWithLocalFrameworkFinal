@@ -597,6 +597,7 @@ function getNearestTableAncestor(htmlElementNode) {
       locatorForTable = byXpath(parentTable,custom)
       tdPosition = relativeXPathFromParent(el,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"
       var xpathText = ""
       for(var i=0;i<el.parentNode.childElementCount;i++)
       {
@@ -622,6 +623,7 @@ function getNearestTableAncestor(htmlElementNode) {
       parentTable = getNearestTableAncestor(el)
       locatorForTable = byXpath(parentTable,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"
 
       var xpathText = ""
       for(var i=0;i<el.childElementCount;i++)
@@ -651,6 +653,7 @@ function getNearestTableAncestor(htmlElementNode) {
       trPosition = relativeXPathFromParent(el.parentNode.parentNode,custom)
       tdPosition = relativeXPathFromParent(el.parentNode,custom)
       sessionStorage.textToLookFor = ""
+      sessionStorage.UsingbyXpathUsingContains = "true"      
       if(el.innerText && el.innerText.length > 0)
       {
         var xpathText = ""
@@ -927,7 +930,11 @@ function getNearestTableAncestor(htmlElementNode) {
     if(/^\d/.test(lableValue))
        lableValue = sessionStorage.pageName + lableValue
 
-    return lableValue
+     // if the length of variable is more than 30 
+    if(lableValue.length > 30)
+       lableValue = lableValue.substr(0,30)
+
+    return sessionStorage.pageName + "_" + lableValue
 
   }
 
@@ -998,16 +1005,30 @@ function printHTMLBodyConfirm(lableValue,message,flag)
   {
     for (var ids in elementIDs)
     {
-   
-      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
-      if (lableValue == null)
+ 
+       // Code for li and option     
+      if(actualEle.nodeName.toLowerCase().indexOf("li") != -1 || actualEle.nodeName.toLowerCase().indexOf("option") != -1)
       {
-        lableValue = "NotAbleToIdentify"
+          lableValue  = sessionStorage.currentElementLabel + "_Option"
+          lableValue = updateLabelName(lableValue,elementIDs[ids])
+
+          // update the value for drop down
+          sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual.substring(0, sessionStorage.dataDocumentContentManual.lastIndexOf((sessionStorage.currentElementLabel+":")));
+          sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + sessionStorage.currentElementLabel  + ": \""+ getElementValue(actualEle) +"\"</br>"
+
       }
+      else
+      {
+        lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
+        console.log("lableValue Anil: " , lableValue)
+        if (lableValue == null || lableValue.trim().length == 0)
+          lableValue = "NotAbleToIdentify"
 
-      lableValue = customizedLabel(lableValue)
-      lableValue = updateLabelName(lableValue,elementIDs[ids])
-
+        lableValue = customizedLabel(lableValue)
+        lableValue = updateLabelName(lableValue,elementIDs[ids])
+      }
+  
+ 
       var table = window_handle.document.getElementById("tableID");
       var row = table.insertRow ((table.rows.length -1 ));
 
@@ -1039,14 +1060,13 @@ function printHTMLBodyConfirm(lableValue,message,flag)
       modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
 
       // For table row / column identificatin using identifier 
-      if(ids == "byXpathUsingContains")
+      if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
       {
           sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
       }
       else
       {
-          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
-  
+          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"  
       }  
       generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,custom)
       generateDataFileForManual(lableValue,actualEle)    
@@ -1074,14 +1094,6 @@ function printHTMLBodyConfirm(lableValue,message,flag)
       if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "true")
       {
         
-        // Update the element status so delete the last entry and add the new entry for Verify 
-        var temp = tab +generateWaitCommandHelperVerify(ids,lableValue) +tab2 + "if \"" +lableValue + "\" in data:" + "</br>" + tab3 + seleniumCommandHelper(ids,lableValue,previousElementEventType) + "</br></br>"
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
-        
-        var scriptVerify = helperForVerification(ids,lableValue,actualEle)
-        var temp = tab +generateWaitCommandHelperVerify(ids,lableValue) + tab2 + "if \"" + lableValue + "\" in data:" + "</br>" +  tab3 + scriptVerify + "</br></br>"
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
-
         var table = window_handle.document.getElementById("tableID");
         var row = table.insertRow ((table.rows.length -1 ));
 
@@ -1094,22 +1106,13 @@ function printHTMLBodyConfirm(lableValue,message,flag)
         var cell = row.insertCell (3);
         cell.innerHTML = currentPageAddress;
 
-        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,currentElement,"false",custom)
-        //sessionStorage.currentElementLabel = lableValue
       }     
       else
       {
 
         // Update the element status so delete the last entry and add the new entry for Operation
-        var temp =tab + generateWaitCommandHelper(ids,lableValue) + tab2 + "if \"" +lableValue + "\" in data:" + "</br>" + tab3 + seleniumCommandHelper(ids,lableValue,previousElementEventType) + "</br></br>"
+        var temp = tab2 + "if \"" +lableValue + "\" in data:" + "</br>" + tab3 + generateWaitCommandHelper(ids,lableValue,tab3) + "</br>" + tab3 + seleniumCommandHelper(ids,lableValue,previousElementEventType) + "</br></br>"
         sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace(temp,"")
-
-          // for Select which have attribute like aria-owns
-        if(actualEle.hasAttribute("aria-owns"))
-        {
-            var temp =  tab3 + "driver.find_element_by_xpath(\"//li[contains(.,'\" + data['" + lableValue + "']+\"')]\").click()" + "</br></br>"
-            sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace(temp,"")
-        }
 
         if(actualEle.nodeName.toLowerCase().indexOf("select") != -1)
         {
@@ -1223,91 +1226,101 @@ function getElementFromList(lableValue, locatorName)
 
   function printHTMLBodyForManualVerification(window_handle,elementIDs,currentElementEventType,actualEle,custom)
   {
-    for (var ids in elementIDs)
+    if(actualEle.nodeName.toLowerCase().indexOf("li") == -1 && actualEle.nodeName.toLowerCase().indexOf("option") == -1)
+      {
+        for (var ids in elementIDs)
+        {
+          lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
+          if (lableValue == null || lableValue.trim().length == 0)
+          {
+            lableValue = "NotAbleToIdentify"
+          }
+
+          lableValue = customizedLabel(lableValue)
+          var oldElement = "false"
+
+          if(isElementInList(lableValue, elementIDs[ids]))
+            {
+              oldElement = "true"
+              lableValue = getElementFromList(lableValue, elementIDs[ids])
+            }
+
+          
+          // For new Action during verification
+          //console.log("oldElement : " , oldElement)
+          if(oldElement == "false")
+          {
+
+              lableValue = updateLabelName(lableValue,elementIDs[ids])
+
+              var table = window_handle.document.getElementById("tableID");
+              var row = table.insertRow ((table.rows.length -1 ));
+
+              var cell = row.insertCell (0);
+              cell.innerHTML = lableValue;
+              var cell = row.insertCell (1);
+              cell.innerHTML = elementIDs[ids];
+              var cell = row.insertCell (2);
+              cell.innerHTML = "During Verification Code : " + seleniumCommandHelper(ids,lableValue,currentElementEventType,custom.view.document);
+              var cell = row.insertCell (3);
+              cell.innerHTML = currentPageAddress;
+
+              sessionStorage.currentElementLabel = lableValue
+              sessionStorage.currentElementlocator = elementIDs[ids]
+
+
+              //added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
+              var modifiedLocator  = elementIDs[ids]
+              modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
+           
+              // For table row / column identificatin using identifier 
+              if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
+              {
+                  sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
+              }
+              else
+              {
+                  sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+          
+              }  
+
+              //sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
+
+              generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true",custom)
+          }
+          else
+          {
+              var table = window_handle.document.getElementById("tableID");
+              var row = table.insertRow ((table.rows.length -1 ));
+
+              var cell = row.insertCell (0);
+              cell.innerHTML = lableValue;
+              var cell = row.insertCell (1);
+              cell.innerHTML = elementIDs[ids];
+              var cell = row.insertCell (2);
+              //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
+              cell.innerHTML = "Verification Code"
+              var cell = row.insertCell (3);
+              cell.innerHTML = currentPageAddress;
+
+              sessionStorage.currentElementLabel = lableValue
+              //sessionStorage.currentElementlocator = elementIDs[ids]
+
+              //sessionStorage.currentElementLabel = "NotRequired"
+              //sessionStorage.currentElementLabel = lableValue
+              generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"false",custom)
+          }
+
+          if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
+            sessionStorage.setLoop = "continue"
+
+        }
+      }
+    else
     {
-      lableValue  = generateLocatorNameHelper(elementIDs[ids],custom.view.document)
-      if (lableValue == null)
-      {
-      lableValue = "NotAbleToIdentify"
-      }
-
-      lableValue = customizedLabel(lableValue)
-      var oldElement = "false"
-
-      if(isElementInList(lableValue, elementIDs[ids]))
-        {
-      oldElement = "true"
-      lableValue = getElementFromList(lableValue, elementIDs[ids])
-        }
-
-      
-      // For new Action during verification
-      //console.log("oldElement : " , oldElement)
-      if(oldElement == "false")
-      {
-
-          lableValue = updateLabelName(lableValue,elementIDs[ids])
-
-        var table = window_handle.document.getElementById("tableID");
-        var row = table.insertRow ((table.rows.length -1 ));
-
-        var cell = row.insertCell (0);
-        cell.innerHTML = lableValue;
-        var cell = row.insertCell (1);
-        cell.innerHTML = elementIDs[ids];
-        var cell = row.insertCell (2);
-        cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom.view.document);
-        var cell = row.insertCell (3);
-        cell.innerHTML = currentPageAddress;
-
-        sessionStorage.currentElementLabel = lableValue
-        sessionStorage.currentElementlocator = elementIDs[ids]
-
-
-        //added this code for   "//button[@ng-click="saveLicense('activate')"]"  issue 
-        var modifiedLocator  = elementIDs[ids]
-        modifiedLocator = modifiedLocator.replace(/"/g, '\\"');
-       
-        // For table row / column identificatin using identifier 
-        if(ids == "byXpathUsingContains")
-        {
-            sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
-        }
-        else
-        {
-            sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
-    
-        }  
-
-        //sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"
-
-        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"true",custom)
-      }
-      else
-      {
-        var table = window_handle.document.getElementById("tableID");
-        var row = table.insertRow ((table.rows.length -1 ));
-
-        var cell = row.insertCell (0);
-        cell.innerHTML = lableValue;
-        var cell = row.insertCell (1);
-        cell.innerHTML = elementIDs[ids];
-        var cell = row.insertCell (2);
-        //cell.innerHTML = seleniumCommandHelper(ids,lableValue,currentElementEventType,custom);
-        cell.innerHTML = "Verification Code"
-        var cell = row.insertCell (3);
-        cell.innerHTML = currentPageAddress;
-
-        //sessionStorage.currentElementLabel = "NotRequired"
-        //sessionStorage.currentElementLabel = lableValue
-        generateVerificationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,"false",custom)
-      }
-
-      if(sessionStorage.setLoop && sessionStorage.setLoop == "true")
-        sessionStorage.setLoop = "continue"
-
+      console.log("Ignor li and Option during verification")
     }
-   
+     
   }
 
 
@@ -1317,7 +1330,7 @@ function getElementFromList(lableValue, locatorName)
     {
    
       lableValue  = generateLocatorNameHelper(elementIDs[ids],custom)
-      if (lableValue == null)
+      if (lableValue == null || lableValue.trim().length > 0)
       {
         lableValue = "NotAbleToIdentify"
       }
@@ -1349,23 +1362,23 @@ function getElementFromList(lableValue, locatorName)
 
             var cell = row.insertCell (2);
             cell.innerHTML = "Verify This";
-            var temp = generateWaitCommandHelperVerify(ids,lableValue)
-            temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
+            var temp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
+            temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + generateWaitCommandHelperVerify(ids,lableValue,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "</br>"
             temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + scriptVerify + "</br></br>"
 
             // Remove verify logic as user wants to verify on in operation itself
             sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
 
-            var temp = generateWaitCommandHelperVerify(ids,lableValue)
-            temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
+            var temp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
+            temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + generateWaitCommandHelperVerify(ids,lableValue,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "</br>"
             temp = temp + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
 
             // Remove action logic as user wants to verify on in operation itself
             sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(temp,"")
           
             
-            sessionStorage.functionContentManual = sessionStorage.functionContentManual + generateWaitCommandHelper(ids,lableValue)
             sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" + lableValue + "\" in data:" + "</br>"
+            sessionStorage.functionContentManual = sessionStorage.functionContentManual + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + generateWaitCommandHelper(ids,lableValue,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")+ "</br>"
             sessionStorage.functionContentManual = sessionStorage.functionContentManual + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + scriptVerify + "</br></br>"
             var cell = row.insertCell (3);
             cell.innerHTML = currentPageAddress;
@@ -1938,7 +1951,7 @@ function getElementFromList(lableValue, locatorName)
         var ele = tempFunctionArray[0][3]
         var currentElementType = getElementEventType(ele)
         
-        functionContent = functionContent + generateWaitCommandHelper(ids,lableValue)
+        functionContent = functionContent + generateWaitCommandHelper(ids,lableValue,"")
        
         // selenium command . like driver.find_element_by_id(self.lable).send_keys()
         functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementType) + "</br></br>"
@@ -2006,7 +2019,7 @@ function getElementFromList(lableValue, locatorName)
     if(newElement == "true")
     {
         //If new Element during verification then add this condition
-        if(ids == "byXpathUsingContains")
+      if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
         {
           //updateTabValue()
           sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
@@ -2021,14 +2034,14 @@ function getElementFromList(lableValue, locatorName)
         var scriptVerify = helperForVerification(ids,lableValue,ele)
         if (scriptVerify!=null && scriptVerify.length > 0 )
         { 
-          sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelperVerify(ids,lableValue)
           sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" + lableValue + "\" in data:" + "</br>"
+          sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelperVerify(ids,lableValue,tab3)+ "</br>"
           sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
         }
 
         // Operation Code Update
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelper(ids,lableValue,tab3)+ "</br>"
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
 
         // Code for update data file
@@ -2041,8 +2054,8 @@ function getElementFromList(lableValue, locatorName)
       var scriptVerify = helperForVerification(ids,lableValue,ele)
       if (scriptVerify!=null && scriptVerify.length > 0 )
       { 
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelperVerify(ids,lableValue)
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" + lableValue + "\" in data:" + "</br>"
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelperVerify(ids,lableValue,tab3)+ "</br>"
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
       }
 
@@ -2050,9 +2063,8 @@ function getElementFromList(lableValue, locatorName)
       // if "label" in data:
       if(ele.nodeName.toLowerCase().indexOf("input") == -1 && ele.nodeName.toLowerCase().indexOf("button") == -1 ) 
       {
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab +generateWaitCommandHelper(ids,lableValue)
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-          // selenium command . like driver.find_element_by_id(self.lable).send_keys()
+        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelper(ids,lableValue,tab3)+ "</br>"
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
       }
   }
@@ -2147,7 +2159,7 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele,custom)
   }
 
   // For table row / column identificatin using identifier 
-  if(ids == "byXpathUsingContains")
+  if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
   {
     //updateTabValue()
     sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
@@ -2158,17 +2170,13 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele,custom)
   }
 
       
-  sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateWaitCommandHelper(ids,lableValue)
-
     // if "label" in data:
   sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-   
+ 
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab3 + generateWaitCommandHelper(ids,lableValue,tab3)+ "</br>"
+  
     // selenium command . like driver.find_element_by_id(self.lable).send_keys()
   sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
-
-    // for Select which have attribute like aria-owns
-  if(ele.hasAttribute("aria-owns") || locatorName.indexOf("aria-owns") != -1)
-      sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//li[contains(.,'\" + data['" + lableValue + "']+\"')]\").click()" + "</br></br>"
 
   if(ele.nodeName.toLowerCase().indexOf("select") != -1)
        sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "driver.find_element_by_xpath(\"//option[contains(.,'\" + data['" + lableValue + "']+\"')]\").click()" + "</br></br>"
@@ -2213,12 +2221,13 @@ function generateOperationScript(functionName, tempFunctionArray)
 
          // Check if current element is a link or a we need to add a selenium wait
           //if (ele !=null && ele.nodeName !=null && (ele.nodeName.toLowerCase() == 'a' || ele.nodeName.toLowerCase() == 'span'))
-                functionContent = functionContent + generateWaitCommandHelper(ids,lableValue)
 
  
           // Code for operation
           // if "label" in data:
           functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "if \"" +lableValue + "\" in data:" + "</br>"
+          functionContent = functionContent  +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + generateWaitCommandHelper(ids,lableValue,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")+ "</br>"
+
          
           // selenium command . like driver.find_element_by_id(self.lable).send_keys()
           functionContent = functionContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + seleniumCommandHelper(ids,lableValue,currentElementType) + "</br></br>"
@@ -2504,7 +2513,7 @@ function seleniumCommandHelper(identifierName,locator,EventType)
 function helperForVerification(identifierName,locator,elementID)
 {
    var seleniumReferenceCommand  = {"byId" : "find_element_by_id" , "byName" : "find_element_by_name", "byXpath" : "find_element_by_xpath" ,"byXpathUsingContains" : "find_element_by_xpath" , "byXpathAttributes" : "find_element_by_xpath" , "byXpathPosition" : "find_element_by_xpath", "byDomIndex" : "find_element_by_xpath" , "byXpathHref" : "find_element_by_xpath" , "byXpathIdRelative" : "find_element_by_xpath" , "byXpathImg" : "find_element_by_xpath", "byXpathLink" : "find_elements_by_partial_link_text" , "byCss" : "find_elements_by_css_selector"}
-   var elementNodeTypeVerify = {"span" : "text" ,"div" : "text", "text": "get_attribute(\"value\")" ,"textarea": "get_attribute(\"value\")" , "submit": "click()" , "checkbox": "is_selected()","radio": "is_selected()","table" : "text"}
+   var elementNodeTypeVerify = {"span" : "text" ,"li" : "text" ,"option" : "text" ,"div" : "text", "text": "get_attribute(\"value\")" ,"textarea": "get_attribute(\"value\")" , "submit": "click()" , "checkbox": "is_selected()","radio": "is_selected()","table" : "text"}
    var seleniumCommandVerify = ""
   
    var typeOfElement = ""
@@ -2512,7 +2521,7 @@ function helperForVerification(identifierName,locator,elementID)
    if (elementV != null)
    {
      elementNodeType = elementV.nodeName.toLowerCase()    
-     if (elementNodeType == "span" || elementNodeType == "div" )
+     if (elementNodeType == "span" || elementNodeType == "div" || elementNodeType == "li"  || elementNodeType == "option")
      {
           seleniumCommandVerify = seleniumCommandVerify +
           "self.assert_equal(str(driver." +seleniumReferenceCommand[identifierName]+"(self."+ locator +")."+
@@ -2594,24 +2603,28 @@ function helperForVerification(identifierName,locator,elementID)
  
 }
  
-function generateWaitCommandHelper(identifierName,locator)
+function generateWaitCommandHelper(identifierName,locator,tab)
 {
  
   var seleniumReferenceCommand  = {"byId" : "ID" , "byName" : "NAME", "byXpath" : "XPATH" ,"byXpathUsingContains" : "XPATH" , "byXpathAttributes" : "XPATH" , "byXpathPosition" : "XPATH", "byDomIndex" : "XPATH" , "byXpathHref" : "XPATH" , "byXpathIdRelative" : "XPATH" , "byXpathImg" : "XPATH", "byXpathLink" : "PARTIAL_LINK_TEXT" , "byCss" : "CSS_SELECTOR"}
   
-  var htmlContent  = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait = WebDriverWait(driver, 200)</br>" +
-                      "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait.until(EC.element_to_be_clickable((By." +seleniumReferenceCommand[identifierName]+ ",self." + locator +  ")),'"+ locator + " Element not loaded')</br>" +
+  //var htmlContent  = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait = WebDriverWait(driver, 200)</br>" + tab + 
+  //                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait.until(EC.element_to_be_clickable((By." +seleniumReferenceCommand[identifierName]+ ",self." + locator +  ")),'"+ locator + " Element not loaded')</br>" +
+  //                    "</br>"
+  var htmlContent  = "wait = WebDriverWait(driver, 200)</br>" + tab + 
+                     "wait.until(EC.element_to_be_clickable((By." +seleniumReferenceCommand[identifierName]+ ",self." + locator +  ")),'"+ locator + " Element not loaded')</br>" +
                       "</br>"
+
   return htmlContent
 }
 
-function generateWaitCommandHelperVerify(identifierName,locator)
+function generateWaitCommandHelperVerify(identifierName,locator,tab)
 {
  
   var seleniumReferenceCommand  = {"byId" : "ID" , "byName" : "NAME", "byXpath" : "XPATH" ,"byXpathUsingContains" : "XPATH" , "byXpathAttributes" : "XPATH" , "byXpathPosition" : "XPATH", "byDomIndex" : "XPATH" , "byXpathHref" : "XPATH" , "byXpathIdRelative" : "XPATH" , "byXpathImg" : "XPATH", "byXpathLink" : "PARTIAL_LINK_TEXT" , "byCss" : "CSS_SELECTOR"}
   
-  var htmlContent  = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait = WebDriverWait(driver, 200)</br>" +
-                      "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait.until(EC.presence_of_element_located((By." +seleniumReferenceCommand[identifierName]+ ",self." + locator +  ")),'"+ locator + " Element not loaded')</br>" +
+  var htmlContent  = "wait = WebDriverWait(driver, 200)</br>" +  tab +
+                     "wait.until(EC.presence_of_element_located((By." +seleniumReferenceCommand[identifierName]+ ",self." + locator +  ")),'"+ locator + " Element not loaded')</br>" +
                       "</br>"
   return htmlContent
 }
@@ -2733,7 +2746,6 @@ function checkChildElementContainAttribute(elementToCheck,attName)
 {
   if (elementToCheck!= null)
   {
-
       // own check 
       //check if this element  is a label
       ownCheck = elementContainAttribute(elementToCheck,attName)
@@ -2790,13 +2802,13 @@ function generateLocatorNameHelper(locator,custom)
         
          if (forElement.title !=null && forElement.title.trim().length  > 0)
             return forElement.title.trim() + tab
- 
+        
          if (forElement.value !=null && forElement.value.trim().length  > 0)
             return forElement.value.trim() + tab
  
          if (forElement.innerText !=null  && forElement.innerText.trim().length  > 0)
             return forElement.innerText.trim() + tab
- 
+        
          if (forElement.name !=null  && forElement.name.trim().length  > 0)
             return forElement.name.trim() + tab
  
@@ -2804,19 +2816,19 @@ function generateLocatorNameHelper(locator,custom)
             return forElement.id.trim() + tab
  
       }
-       forElement = elementToGenerateName
-       if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").trim().length  > 0)
-          return forElement.getAttribute("for").trim() + tab        
-       if (forElement.title !=null && forElement.title.trim().length  > 0)
-          return forElement.title.trim() + tab
-       if (forElement.name !=null  && forElement.name.trim().length  > 0)
-          return forElement.name.trim() + tab
-       if (forElement.id !=null  && forElement.id.trim().length  > 0)
-          return forElement.id.trim() + tab
-       if (forElement.value !=null && forElement.value.trim().length  > 0)
-          return forElement.value.trim() + tab
-       if (forElement.innerText !=null  && forElement.innerText.trim().length  > 0)
-          return forElement.innerText.trim() + tab
+     forElement = elementToGenerateName
+     if (forElement.getAttribute("for") !=null  && forElement.getAttribute("for").trim().length  > 0)
+        return forElement.getAttribute("for").trim() + tab        
+     if (forElement.title !=null && forElement.title.trim().length  > 0)
+        return forElement.title.trim() + tab
+     if (forElement.name !=null  && forElement.name.trim().length  > 0)
+        return forElement.name.trim() + tab
+     if (forElement.id !=null  && forElement.id.trim().length  > 0)
+        return forElement.id.trim() + tab
+     if (forElement.value !=null && forElement.value.trim().length  > 0)
+        return forElement.value.trim() + tab
+     if (forElement.innerText !=null  && forElement.innerText.trim().length  > 0)
+        return forElement.innerText.trim() + tab
  
     }
   return null
@@ -2923,7 +2935,7 @@ function printHTMLFooter(window_handle)
   '<div style="font-size: 1.5em;padding-left: 10em;">********************************** Please follow below Steps for Execution *********************************</div></br>'+
   '<div style="font-size: 1.5em;padding-left: 15em;">1. User Need to be in PYATS Prompt </div>'+
   '<div style="font-size: 1.5em;padding-left: 15em;">2. Move to Job file </div> ' + 
-  '<div style="font-size: 1.5em;padding-left: 15em;">3. Execute Command : easypy DemoClass.py -selenium_server SELENIUM_SERVER_2 -config_file device.yaml</div></br>'+
+  '<div style="font-size: 1.5em;padding-left: 15em;">3. Execute Command : easypy democlass_job.py -selenium_server SELENIUM_SERVER_2 -config_file device.yaml</div></br>'+
   '<div style="font-size: 1.5em;padding-left: 10em;">****************************************************************************************************** </div>'
 
   window_handle.document.write(htmlFooter)
@@ -3415,6 +3427,7 @@ function printLib()
   tab4 + '                raise'+ "<br>" +
   tab1 + '        self.driver.get(url)'+ "<br>" +
   tab1 + '        self.driver.maximize_window();'+ "<br>" +
+  tab1 + '        self.driver.implicitly_wait(5) # seconds'+ "<br>" +
   tab1 + '        return self.driver'+ "<br>" + "<br>" +
   tab + ''+ "<br>" +
   tab + '    def load_data(self, fileName, driver=None):'+ "<br>" +
@@ -3530,7 +3543,7 @@ function printServerDetails()
   "tab1 { padding-left: 2em; }" +
   "</style></head><body>";
   
-  tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  tab = "&nbsp;"
   tab1 = tab + tab
   tab2 = tab + tab + tab 
   tab3 = tab + tab + tab + tab
@@ -4173,7 +4186,7 @@ function generateSpec()
 
 function elementChanged(custom)
 {
-if (currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.toLowerCase() != "body" && currentElement.nodeName.toLowerCase() != "li" && currentElement.nodeName.toLowerCase() != "image" && currentElement.nodeName.toLowerCase() != "circle" && currentElement.nodeName.toLowerCase() != "form" && isValidElement(currentElement))
+if (currentElement.nodeName.toLowerCase() != "html" && currentElement.nodeName.toLowerCase() != "body" && currentElement.nodeName.toLowerCase() != "image" && currentElement.nodeName.toLowerCase() != "circle" && currentElement.nodeName.toLowerCase() != "form" && isValidElement(currentElement))
   {
    if (previousElement != currentElement)
     {
@@ -4996,6 +5009,8 @@ function ManualBuild()
 
   // Code for Frame window 
   addEventsToAllFrames()
+
+  sessionStorage.pageName = "DemoClass"
   
   // Code for display Window
   window_handle = printHTMLHeaderForManual()
@@ -5049,6 +5064,9 @@ function handler(event)
       console.log(event.srcElement)
       currentElement = undefined
     }
+
+    // clean up section
+    sessionStorage.UsingbyXpathUsingContains = ""
  }
 
 function contextmenuEventHandler(event) 
@@ -5071,7 +5089,14 @@ function focusoutEventHandler(event)
 {
   updateTabValue()
 
-  updateDataFileForManual(currentElement,event.view.document)
+  //updateDataFileForManual(currentElement,event.view.document)
+
+  // During Verification I dont want to update the value 
+  if(sessionStorage.setRecordVerify && sessionStorage.setRecordVerify == "false")
+    updateDataFileForManual(currentElement,event.view.document)
+  else
+    updateDataFileForManual(currentElement,event.view.document)
+
 
   // Code for Pop Up / Alert
   if(typeof(sessionStorage.alert) != "undefined" && sessionStorage.alert == 'true'){

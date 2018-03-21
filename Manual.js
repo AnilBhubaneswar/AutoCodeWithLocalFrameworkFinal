@@ -2039,11 +2039,14 @@ function getElementFromList(lableValue, locatorName)
           sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
         }
 
+	     //Code for operation if element is enablec ? 
         // Operation Code Update
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelper(ids,lableValue,tab3)+ "</br>"
-        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
-
+      	if((!ele.disabled)) 
+      	{
+	        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab2 + "if \"" +lableValue + "\" in data:" + "</br>"
+	        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 +generateWaitCommandHelper(ids,lableValue,tab3)+ "</br>"
+	        sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab3 + seleniumCommandHelper(ids,lableValue,currentElementEventType) + "</br></br>"
+		}
         // Code for update data file
         generateDataFileForManual(lableValue,ele) 
     }
@@ -2059,7 +2062,6 @@ function getElementFromList(lableValue, locatorName)
         sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab3 + scriptVerify + "</br></br>"
       }
 
-      //Code for operation
       // if "label" in data:
       if(ele.nodeName.toLowerCase().indexOf("input") == -1 && ele.nodeName.toLowerCase().indexOf("button") == -1 ) 
       {
@@ -2933,9 +2935,9 @@ function printHTMLFooter(window_handle)
   "<br><label for='userDefinedClassName'>Class Name : </label><input type='text' id='userDefinedClassName' style='height: 3em;border-color: black;' value='DemoClass'>" + 
   "<label for='addNewScenario'>   Add New Scenario  </label><input type='checkbox' id='addNewScenario'> </br>" + "</br>" + "</br>" +
   '<div style="font-size: 1.5em;padding-left: 10em;">********************************** Please follow below Steps for Execution *********************************</div></br>'+
-  '<div style="font-size: 1.5em;padding-left: 15em;">1. User Need to be in PYATS Prompt </div>'+
-  '<div style="font-size: 1.5em;padding-left: 15em;">2. Move to Job file </div> ' + 
-  '<div style="font-size: 1.5em;padding-left: 15em;">3. Execute Command : easypy democlass_job.py -selenium_server SELENIUM_SERVER_2 -config_file device.yaml</div></br>'+
+  '<div style="font-size: 1.5em;padding-left: 15em;">1. Please have lib.py and HTMLTestRunner.py under library Folder</div></br>'+
+  '<div style="font-size: 1.5em;padding-left: 15em;">2. User Need to be in Parent Folder of Job/dataset/Job/Script File</div>'+
+  '<div style="font-size: 1.5em;padding-left: 15em;">3. Execute Command : python3 -m unittest -v job/democlass_job.py</div></br>'+
   '<div style="font-size: 1.5em;padding-left: 10em;">****************************************************************************************************** </div>'
 
   window_handle.document.write(htmlFooter)
@@ -2990,10 +2992,8 @@ function printLocator()
 
   var locatorDocumentContentStart = "# Please Save this File as locator\\" +
   currentClassName.toLowerCase() + "_locator.py" +"</br></br>"+
-  "__author__ = 'vnagaman'" +"</br>"+
-  "import logging" +"</br>" +
+  "__author__ = 'anpradha'" +"</br>"+
   "from library.lib import *"+ "</br>" +
-  "log = logging.getLogger(__name__)" + "</br>" +
   "class "+ currentLocatorClassName +
   "():"+ "</br>" +  "</br>" +
   "&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):" + "</br>" +
@@ -3051,8 +3051,10 @@ function printScriptManual()
   "from locator." +
   currentClassName.toLowerCase() +  "_locator import *" +"</br>" +
   "from library.lib import *"+ "</br>" +
-  //"from library.lib import *" + "</br>" +
-  //"from library.telnet_library import *" + "</br>" +
+  "from selenium.webdriver.support import expected_conditions as EC" + "</br>" +
+  "from selenium.webdriver.support.ui import WebDriverWait" + "</br>" +
+  "from selenium.webdriver.common.by import By" + "</br>" +
+  "import time" + "</br></br></br>" +
   "class " + currentClassName +
   "(FlexLib, " + currentLocatorClassName+
   "):"+ "</br>" +  "</br>" +
@@ -3191,322 +3193,169 @@ function printLib()
 
 
 
-  var libDocumentContentStart = "# Please Save this File as " + "\\library\\lib.py" +"</br></br>"
+  
+var libDocumentContentStart = "# Please Save this File as " + "\\library\\lib.py" +"</br></br>"
   libDocumentContentStart = libDocumentContentStart +  '__author__ = \'anpradha\''+ "<br>" +
-  'from selenium import webdriver'+ "<br>" +
-  'from selenium.webdriver.chrome.options import Options'+ "<br>" +
-  'from selenium.webdriver.support.ui import WebDriverWait'+ "<br>" +
-  'from selenium.webdriver.common.action_chains import ActionChains'+ "<br>" +
-  'from selenium.webdriver.support import expected_conditions as EC'+ "<br>" +
-  'from selenium.webdriver.common.by import By'+ "<br>" +
-  'from selenium.webdriver.common.keys import Keys'+ "<br>" +
-  'from selenium.common.exceptions import NoAlertPresentException'+ "<br>" +
-  'from selenium.common.exceptions import NoSuchElementException'+ "<br>" +
-  'from selenium.common.exceptions import TimeoutException'+ "<br>" +
-  'import time'+ "<br>" +
-  'import yaml'+ "<br>" +
-  'import json'+ "<br>" +
-  'import os'+ "<br>" +
-  'from ats import easypy'+ "<br>" +
-  'import html'+ "<br>" +
-  'import re'+ "<br>" + "<br>" +
-  'import subprocess'+ "<br>" +
-  'from subprocess import PIPE, Popen'+ "<br>" +
-  'import logging'+ "<br>" + "<br>" + "<br>" +
-  '# Get your logger for your script'+ "<br>" +
-  'log = logging.getLogger(__name__)'+ "<br>" +
-  ''+ "<br>" +
-  ''+ "<br>" + "<br>" +
-  'class Testbed:'+"<br>" +
-  tab + '    testbed = {}'+ "<br>" +
-  tab + '    TESTBED_NOT_DEFINED = """TESTBED variable is not set.'+ "<br>" +
-  tab + '    Please pass TESTBED as an argument by -config_file device_config.yaml.'+ "<br>" +
-  tab + '    """'+ "<br>" +
-  tab + '    SELNIUM_SERVER_NOT_DEFINED = """Selenium Server variable is not set.'+ "<br>" +
-  tab + '    Please pass Selenium Server as an argument by -selenium_server SELENIUM_SERVER_1'+ "<br>" +
-  tab + '    """'+ "<br>" +
-  ''+
-  tab + '    def __init__(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            testbedPath = os.environ["TESTBED"]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.TESTBED_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" +
-  tab1 + '        self.testbedFile = open(testbedPath, "r")'+ "<br>" +
-  tab1 + '        self.testbed = yaml.load(self.testbedFile)'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def get_selenium_details(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            return self.testbed[os.environ["SELENIUM_SERVER"]]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def get_browser_details(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            return self.testbed[os.environ["SELENIUM_SERVER"]]["browser"]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def get_platform_details(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            return self.testbed[os.environ["SELENIUM_SERVER"]]["platform"]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def get_environment_details(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            return self.testbed[os.environ["SELENIUM_SERVER"]]["environment"]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def get_url_details(self):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            return self.testbed[os.environ["SELENIUM_SERVER"]]["url"]'+ "<br>" +
-  tab1 + '        except KeyError:'+ "<br>" +
-  tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-  tab2 + '            raise'+ "<br>" + "<br>" +
-  ''+
-  'class FlexLib:'+ "<br>" + "<br>" +
-  ''+
-  tab + '    def __init__(self):'+ "<br>" +
-  tab1 + '        self.testbed = Testbed()'+ "<br>" + "<br>" +
-  ''+
-  ''+
-  tab + '    def load_yaml_file(self, script_name, script_location):'+ "<br>" +
-  tab1 + '        try:'+ "<br>" +
-  tab2 + '            script_name = script_name.replace("_test.py", ".yaml")'+ "<br>" +
-  tab2 + '            log.info(script_name)'+ "<br>" +
-  tab2 + '            self.yaml_path = os.path.join(script_location, "dataset", script_name)'+ "<br>" +
-  tab2 + '            dataFile = open(self.yaml_path, "r")'+ "<br>" +
-  tab2 + '            self.dataValues = yaml.load(dataFile)'+ "<br>" +
-  tab2 + '            final_dict = {}'+ "<br>" +
-  tab2 + '            primary_keys = list(self.dataValues.keys())'+ "<br>" +
-  tab2 + '            for i in range(len(primary_keys)):'+ "<br>" +
-  tab3 + '                data = list(self.dataValues[primary_keys[i]])'+ "<br>" +
-  tab3 + '                newdata = []'+ "<br>" +
-  tab3 + '                for j in range(len(data)):'+ "<br>" +
-  tab4 + '                    newdata.append(data[j])'+ "<br>" +
-  tab3 + '                final_dict[primary_keys[i]] = newdata'+ "<br>" +
-  tab1 + '        except Exception as e:'+ "<br>" +
-  tab2 + '            log.info("Error occurred during reading yaml file : " + self.yaml_path)'+ "<br>" +
-  tab2 + '            raise '+ "<br>" +
-  tab1 + '        return final_dict'+ "<br>" + "<br>" +
-  tab + '    '+
-  tab + ''+ "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def start_selenium_server(self):'+ "<br>" +
-  tab1 + '        if self.testbed.get_environment_details().lower() == "remote":'+ "<br>" +
-  tab2 + '            # time.sleep(10)'+ "<br>" +
-  tab2 + '            browser = self.testbed.get_browser_details()'+ "<br>" +
-  tab2 + '            selenium_dict = self.testbed.get_selenium_details()'+ "<br>" +
-  tab2 + '            if selenium_dict["hub"]["selenium_hub_port"].lower() == "none":'+ "<br>" +
-  tab3 + '                hub_port = "4444"'+ "<br>" +
-  tab2 + '            else:'+ "<br>" +
-  tab3 + '                hub_port = selenium_dict["hub"]["selenium_hub_port"] '+ "<br>" +
-  tab2 + '            if selenium_dict["node"]["selenium_node_port"].lower() == "none":'+ "<br>" +
-  tab3 + '                node_port = "5555"'+"<br>" +
-  tab2 + '            else:'+ "<br>" +
-  tab3 + '                node_port = selenium_dict["node"]["selenium_node_port"] '+ "<br>" +
-  tab2 + '            selenium_dict = self.testbed.get_selenium_details()'+ "<br>" +
-  tab2 + '            node_ip = selenium_dict["node"]["selenium_node_ip"]'+ "<br>" +
-  tab2 + '            hub_ip = selenium_dict["hub"]["selenium_hub_ip"]'+ "<br>" +
-  tab2 + '            node_user = selenium_dict["node"]["selenium_node_user"]'+ "<br>" +
-  tab2 + '            hub_jar_path = os.path.join(selenium_dict["hub"]["selenium_hub_path_to_jar"], selenium_dict["hub"]["selnium_hub_jar_name"])'+ "<br>" +
-  tab2 + '            command = \'java -jar \' + hub_jar_path + \' -role hub -host \' + hub_ip + \' -port \' + hub_port'+ "<br>" +
-  tab2 + '            self.hub_proc = subprocess.Popen(command, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)'+ "<br>" +
-  tab2 + '            log.info("<<<<<<<<<<<< Selenium Hub Started >>>>>>>>>>>")'+ "<br>" +
-  tab2 + '            node_jar_path = selenium_dict["node"]["selenium_node_path_to_jar"] + selenium_dict["node"]["selenium_node_jar_name"]'+ "<br>" +
-  tab2 + '            if browser.lower() == "chrome" :'+ "<br>" +
-  tab3 + '                newcmd = "java -jar " + node_jar_path + " -role node -host " + node_ip + " -port " + node_port + " -hub http://" + hub_ip + ":" + hub_port + "/grid/register -Dwebdriver.chrome.driver=" + selenium_dict["node"]["selenium_node_path_to_jar"] + "/chromedriver.exe"'+ "<br>" +
-  tab2 + '            else:'+ "<br>" +
-  tab3 + '                newcmd = "java -jar " + node_jar_path + " -role node -host " + node_ip + " -port " + node_port + " -hub http://" + hub_ip + ":" + hub_port + "/grid/register"'+ "<br>" +
-  tab2 + '            final_cmd = " start " + newcmd + " /K " + "cmd.exe"'+ "<br>" +
-  tab2 + '            node_cmd = "rsh " + node_ip + " -l " + node_user + final_cmd'+ "<br>" +
-  tab2 + '            self.node_proc = subprocess.Popen(node_cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)'+ "<br>" +
-  tab2 + '            log.info("<<<<< Waiting 10 Seconds for Selenium Node to Join >>>>>>>")'+ "<br>" +
-  tab2 + '            time.sleep(10)'+ "<br>" +
-  tab2 + '            log.info("<<<<<<<< Node Joined to Hub >>>>>>>>>")'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def stop_selenium_server(self):'+ "<br>" +
-  tab1 + '        if self.testbed.get_environment_details().lower() == "remote":'+ "<br>" +
-  tab2 + '            # time.sleep(10)'+ "<br>" +
-  tab2 + '            selenium_dict = self.testbed.get_selenium_details()'+ "<br>" +
-  tab2 + '            if selenium_dict["hub"]["selenium_hub_port"].lower() == "none":'+ "<br>" +
-  tab3 + '                hub_port = "4444"'+ "<br>" +
-  tab2 + '            else:'+ "<br>" +
-  tab3 + '                hub_port = selenium_dict["hub"]["selenium_hub_port"]  '+ "<br>" +
-  tab2 + '            hub_kill_cmd = "ps -ef | grep " + hub_port'+ "<br>" +
-  tab2 + '            self.hub_kill_proc = subprocess.Popen(hub_kill_cmd, shell=True, stdin=None, stdout=PIPE, stderr=None)'+ "<br>" +
-  tab2 + '            out, err = self.hub_kill_proc.communicate()'+ "<br>" +
-  tab2 + '            if out != None and out.decode("utf-8").strip() != "":'+ "<br>" +
-  tab3 + '                log.info("Output hub pid is:" + out.decode("utf-8"))'+ "<br>" +
-  tab3 + '                outlines = out.decode("utf-8").strip().split("\\n")'+ "<br>" +
-  tab3 + '                for i in range(len(outlines)):'+ "<br>" +
-  tab4 + '                    if "grep" not in outlines[i]:'+ "<br>" +
-  tab5 + '                        port_out = outlines[i].split()[1]'+ "<br>" +
-  tab5 + '                        log.info("PID is:" + port_out)'+ "<br>" +
-  tab5 + '                        hub_kill_port = "kill -9 " + port_out'+ "<br>" +
-  tab5 + '                        self.hub_kill = subprocess.Popen(hub_kill_port, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)'+ "<br>" +
-  tab2 + '            log.info("<<<<<<<<<<<<<< Selenium Hub Stopped >>>>>>>>>>>>>>")'+ "<br>" +
-  tab2 + '            selenium_dict = self.testbed.get_selenium_details()'+ "<br>" +
-  tab2 + '            node_ip = selenium_dict["node"]["selenium_node_ip"]'+ "<br>" +
-  tab2 + '            node_user = selenium_dict["node"]["selenium_node_user"]'+ "<br>" +
-  tab2 + '            if selenium_dict["node"]["selenium_node_port"].lower() == "none":'+ "<br>" +
-  tab3 + '                node_port = "5555"'+ "<br>" +
-  tab2 + '            else:'+ "<br>" +
-  tab3 + '                node_port = selenium_dict["node"]["selenium_node_port"]'+ "<br>" +
-  tab2 + '            node_cmd = \'rsh \' + node_ip + \' -l \' + node_user + \' "netstat -a -o -n | findstr "\' + node_port + \'" | findstr LISTENING"\''+ "<br>" +
-  tab2 + '            self.node_proc = subprocess.Popen(node_cmd, shell=True, stdin=None, stdout=PIPE, stderr=None)'+ "<br>" +
-  tab2 + '            out, err = self.node_proc.communicate()'+ "<br>" +
-  tab2 + '            if out != None and out.decode("utf-8").strip() != "":'+ "<br>" +
-  tab3 + '                log.info("Output is:" + out.decode("utf-8"))'+ "<br>" +
-  tab3 + '                outlines = out.decode("utf-8").strip().split("\\n")'+ "<br>" +
-  tab3 + '                port_out = outlines[1].split()[-1]'+ "<br>" +
-  tab3 + '                log.info("PID is:" + port_out)'+ "<br>" +
-  tab3 + '                kill_cmd = "rsh " + node_ip + " -l " + node_user + " " + \'"TASKKILL /F /PID \' + port_out + \'"\''+ "<br>" +
-  tab3 + '                log.info("KILL COMMAND IS:" + kill_cmd)'+ "<br>" +
-  tab3 + '                self.node_proc = subprocess.Popen(kill_cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)'+ "<br>" +
-  tab2 + '            log.info("<<<<<<<<<<<< Waiting for 50 seconds for selenium node to kill >>>>>>>>>>>>>>") '+ "<br>" +
-  tab2 + '            time.sleep(50)       '+ "<br>" +
-  tab2 + '            log.info("<<<<<<<<<<<< Selenium Node Stopped Successfully >>>>>>>>>>>>>>")        '+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def execute_rsh_command(self, command_to_run):'+ "<br>" +
-  tab1 + '        log.info("**********************command to run ***********************")'+ "<br>" +
-  tab1 + '        log.info(command_to_run)'+ "<br>" +
-  tab1 + '        self.rsh_proc = subprocess.Popen(command_to_run, shell=True, stdin=None, stdout=PIPE, stderr=None)'+ "<br>" +
-  tab1 + '        out, err = self.rsh_proc.communicate()'+ "<br>" +
-  tab1 + '        outlines = []'+ "<br>" +
-  tab1 + '        errorlines = []'+ "<br>" +
-  tab1 + '        if out != None and out.decode("utf-8").strip() != "":'+ "<br>" +
-  tab2 + '            outlines = out.decode("utf-8").strip()'+ "<br>" +
-  tab2 + '            log.info("Output is:", outlines)'+ "<br>" +
-  tab1 + '        if err != None and err.decode("utf-8").strip() != "":'+ "<br>" +
-  tab2 + '            errorlines = err.decode("utf-8").strip()'+ "<br>" +
-  tab2 + '            log.info("Output is:", errorlines)'+ "<br>" +
-  tab1 + '        return outlines, errorlines        '+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def login(self):'+ "<br>" +
-  tab1 + '        browser = self.testbed.get_browser_details()'+ "<br>" +
-  tab1 + '        platform = self.testbed.get_platform_details()'+ "<br>" +
-  tab1 + '        environment = self.testbed.get_environment_details()'+ "<br>" +
-  tab1 + '        url = self.testbed.get_url_details()'+ "<br>" +
-  tab1 + '        log.info("Browser  : " + browser)'+ "<br>" +
-  tab1 + '        log.info("Platform  : " + platform)            '+ "<br>" +
-  tab1 + '        log.info("Launching " + url)'+ "<br>" +
-  tab1 + '        selenium_dict = self.testbed.get_selenium_details()'+ "<br>" +
-  tab1 + '        self.download_path = selenium_dict["node"]["selenium_node_path_to_jar"]'+ "<br>" +
-  tab1 + '        log.info("Download path :  " + selenium_dict["node"]["selenium_node_path_to_jar"])'+ "<br>" +
-  tab1 + '        if environment == "REMOTE":'+ "<br>" +
-  tab2 + '            if browser.lower() == "chrome":'+ "<br>" +
-  tab3 + '                self.chrome_options = webdriver.ChromeOptions()                    '+ "<br>" +
-  tab3 + '                # for download location'+ "<br>" +
-  tab3 + '                self.chrome_options.add_experimental_option("prefs", {\'download.prompt_for_download\': False})'+ "<br>" +
-  tab3 + '                self.chrome_options.add_experimental_option("prefs", {\'download.default_directory\': self.download_path})'+ "<br>" +
-  tab3 + '                self.driver = webdriver.Remote(command_executor = \'http://\' + selenium_dict["hub"]["selenium_hub_ip"]+\':\' +selenium_dict["hub"]["selenium_hub_port"] + \'/wd/hub\',desired_capabilities=self.chrome_options.to_capabilities())'+ "<br>" +
-  tab2 + '            elif browser.lower() == "firefox":'+ "<br>" +
-  tab3 + '                self.profile = webdriver.FirefoxProfile()'+ "<br>" +
-  tab3 + '                self.profile.set_preference("network.cookie.cookieBehavior", 2)'+ "<br>" +
-  tab3 + '                # for download location'+ "<br>" +
-  tab3 + '                self.profile.set_preference("browser.download.folderList", 2)'+ "<br>" +
-  tab3 + '                self.profile.set_preference("browser.download.manager.showWhenStarting", False)'+ "<br>" +
-  tab3 + '                self.profile.set_preference("browser.download.dir", self.download_path)'+ "<br>" +
-  tab3 + '                self.profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/x-msexcel,application/excel,application/x-excel,application/vnd.ms-excel,image/png,image/jpeg,text/html,text/plain,application/msword,application/xml")'+ "<br>" +
-  tab3 + '                self.driver = webdriver.Remote(desired_capabilities={"browserName": browser,"platform": platform,}, browser_profile=self.profile)'+ "<br>" + "<br>" +
-  tab2 + '        else:'+ "<br>" +
-  tab3 + '            if browser.lower() == "chrome" :'+ "<br>" +
-  tab4 + '                self.driver = webdriver.Chrome()'+ "<br>" +
-  tab3 + '            elif browser.lower() == "firefox" :'+ "<br>" +
-  tab4 + '                self.driver = webdriver.Firefox()'+ "<br>" +
-  tab3 + '            else:'+ "<br>" +
-  tab4 + '                log.info(browser + "Browser is not supported")'+ "<br>" +
-  tab4 + '                raise'+ "<br>" +
-  tab1 + '        self.driver.get(url)'+ "<br>" +
-  tab1 + '        self.driver.maximize_window();'+ "<br>" +
-  tab1 + '        self.driver.implicitly_wait(5) # seconds'+ "<br>" +
-  tab1 + '        return self.driver'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def load_data(self, fileName, driver=None):'+ "<br>" +
-  tab1 + '        yamlFile = open(fileName, "r")'+ "<br>" +
-  tab1 + '        dataSet = yaml.load(yamlFile)'+ "<br>" +
-  tab1 + '        if driver != None:'+ "<br>" +
-  tab2 + '            self.actions = ActionChains(driver)'+ "<br>" +
-  tab1 + '        log.info(dataSet)'+ "<br>" +
-  tab1 + '        return dataSet'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def success_print(self, message):'+ "<br>" +
-  tab1 + '        log.info(message)'+ "<br>" +
-  tab1 + '        return True'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def assert_equal(self, actual, expected, error_message=None, success_message=None):'+ "<br>" +
-  tab1 + '        error_message = "Assertion Failed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Error Message : " + str(error_message)'+ "<br>" +
-  tab1 + '        success_message = "Assertion Passed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Success Message : " + str(success_message)'+ "<br>" +
-  tab1 + '        assert actual == expected and self.success_print(success_message), error_message'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def capture_failure(self, driver, log, testcasename):'+ "<br>" +
-  tab1 + '        log_path = easypy.runtime'+ "<br>" +
-  tab1 + '        log.info(log_path)'+ "<br>" +
-  tab1 + '        filename = testcasename + ".png"'+ "<br>" +
-  tab1 + '        screen_path = os.path.join(log_path.directory , filename)'+ "<br>" +
-  tab1 + '        driver.save_screenshot(screen_path)'+ "<br>" +
-  tab1 + '        msg = "Failed message"'+ "<br>" +
-  tab1 + '        initial_url = "http://earms-trade.cisco.com/tradeui/imageViewer?fn="'+ "<br>" +
-  tab1 + '        archive = log_path.archive'+ "<br>" +
-  tab1 + '        archive = archive.lstrip("/")'+ "<br>" +
-  tab1 + '        archive = archive.split("/")'+ "<br>" +
-  tab1 + '        req_url = "/"'+ "<br>" +
-  tab1 + '        zip_file = archive[-1]'+ "<br>" +
-  tab1 + '        zip_file_split = zip_file.split(".")'+ "<br>" +
-  tab1 + '        req_date = zip_file_split[1]'+ "<br>" +
-  tab1 + '        s = time.strptime(req_date, "%Y%b%d_%H:%M:%S")'+ "<br>" +
-  tab1 + '        req_time = time.strftime(\'%Y/%m/%d/%H/%M/\', s)'+ "<br>" +
-  tab1 + '        req_time = req_time.replace(\'/\', \'%2F\')'+ "<br>" +
-  tab1 + '        zip_file = zip_file.replace(\':\', \'%3A\')'+ "<br>" +
-  tab1 + '        final_url = initial_url + filename + "&archive=" + req_time + zip_file'+ "<br>" +
-  tab1 + '        message = \'<img src=%s alt="Failure Message">\' % (final_url)'+ "<br>" +
-  tab1 + '        log.info(message)'+ "<br>" +
-  tab1 + '        log.info(final_url)'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def get_data_count(self, data_values, data):'+ "<br>" +
-  tab1 + '        data_dict = {}'+ "<br>" +
-  tab1 + '        for i in range(len(list(data_values.keys()))):'+ "<br>" +
-  tab2 + '            data_dict[list(data_values.keys())[i]] = len(data_values[list(data_values.keys())[i]])'+ "<br>" +
-  tab1 + '        count = []'+ "<br>" +
-  tab1 + '        for i in range(data_dict.get(data)):'+ "<br>" +
-  tab2 + '            count.append(i)'+ "<br>" +
-  tab1 + '        return count'+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def get_testcase_names(self, data_values, data):'+ "<br>" +
-  tab1 + '        testcase_list = []'+ "<br>" +
-  tab1 + '        for i in range(len(data_values[data])):'+ "<br>" +
-  tab2 + '            testcase_list.append(data_values[data][i]["testCase"])'+ "<br>" +
-  tab1 + '        return testcase_list'+ "<br>" + "<br>" +
-  tab + ' '+ "<br>" +
-  tab + '    def istanbul_code_coverage(self, driver, file_name):'+ "<br>" +
-  tab1 + '        data = driver.execute_script(\'return window.__coverage__\')'+ "<br>" +
-  tab1 + '        log.info("waiting for 10 sec to coverage tool to run")'+ "<br>" +
-  tab1 + '        time.sleep(10)'+ "<br>" +
-  tab1 + '        coverage_file_name = "../codecoverage/" + "coverage_" + file_name + ".json"'+ "<br>" +
-  tab1 + '        log.info(coverage_file_name)'+ "<br>" + "<br>" +
-  tab1 + '        if data is not None:'+ "<br>" +
-  tab2 + '            with open(coverage_file_name, \'w\') as f:'+ "<br>" +
-  tab3 + '                json.dump(data, f)'+ "<br>" +
-  tab1 + '        else:'+ "<br>" +
-  tab2 + '            log.info("Coverage cant be calculated  as Instrumention code is not availabe")        '+ "<br>" + "<br>" +
-  tab + ''+ "<br>" +
-  tab + ''+ "<br>" +
-  'class MyException(Exception):'+ "<br>" +
-  tab + '    def __init__(self, value):'+ "<br>" +
-  tab1 + '        self.value = value'+ "<br>" +
-  tab + ''+ "<br>" +
-  tab + '    def __str__(self):'+ "<br>" +
-  tab1 + '        return repr(self.value)'; + "<br>"
+'from selenium import webdriver'+ "<br>" +
+'import yaml'+ "<br>" +
+'import os'+ "<br>" +
+'import imp'+ "<br>" +
+'import sys'+ "<br>" +
+'import logging'+ "<br>" +
+'import datetime'+ "<br>" +
+'from library.HTMLTestRunner import HTMLTestRunner'+ "<br>" +
+''+ "<br>" +
+''+ "<br>" +
+'def custom_logger(name):'+ "<br>" +
+tab + '    formatter = logging.Formatter(fmt=\'%(asctime)s %(levelname)-8s %(message)s\','+ "<br>" +
+'                                  datefmt=\'%Y-%m-%d %H:%M:%S\')'+ "<br>" +
+tab + '    dirpath = os.getcwd()'+ "<br>" +
+tab + '    dirpath = dirpath + "/results"'+ "<br>" +
+tab + '    if not os.path.exists(dirpath):'+ "<br>" +
+tab1 + '        os.makedirs(dirpath)    '+ "<br>" +
+tab + '    handler = logging.FileHandler(dirpath + "/" + \'log.txt\', mode=\'w\')'+ "<br>" +
+tab + '    handler.setFormatter(formatter)'+ "<br>" +
+tab + '    screen_handler = logging.StreamHandler(stream=sys.stdout)  '+ "<br>" +
+tab + '    screen_handler.setFormatter(formatter)'+ "<br>" +
+tab + '    logger = logging.getLogger(name)'+ "<br>" +
+tab + '    logger.setLevel(logging.INFO)'+ "<br>" +
+tab + '    logger.addHandler(handler)'+ "<br>" +
+tab + '    logger.addHandler(screen_handler)'+ "<br>" +
+tab + '    return logger'+ "<br>" +
+''+ "<br>" +
+''+ "<br>" +
+'log = custom_logger(__name__)'+ "<br>" +
+''+ "<br>" +
+''+ "<br>" +
+'class FlexLib:'+ "<br>" +
+tab + '    BROWSER_NOT_DEFINED = """ Browser Detail not Provided Please Provide Browser Detail in /job/system_properties.yaml file e.g browser: \'chrome\'"""'+ "<br>" +
+tab + '    BROWSER_DRIVER_PATH_NOT_DEFINED = """ Browser Driver Path Detail not Provided Please Provide Browser Driver Path Detail in /job/system_properties.yaml file e.g chrome_driver_path: \'/Users/anpradha/Downloads/chromedriver\'"""'+ "<br>" +
+tab + '    URL_NOT_DEFINED = """ URL Detail not Provided Please Provide URL Detail in /job/system_properties.yaml file e.g url: \'www.goole.com\'"""'+ "<br>" +
+''+ "<br>" +
+tab + '    def __init__(self):'+ "<br>" +
+tab1 + '        self.testbedFile = open("./job/system_properties.yaml", "r")'+ "<br>" +
+tab1 + '        self.testbed = yaml.load(self.testbedFile)'+ "<br>" +
+tab1 + '        self.testbedFile.close()'+ "<br>" +
+''+ "<br>" +
+tab + '    def get_browser_details(self):'+ "<br>" +
+tab1 + '        try:'+ "<br>" +
+tab2 + '            return self.testbed["browser"]'+ "<br>" +
+tab1 + '        except KeyError:'+ "<br>" +
+tab2 + '            log.info(self.BROWSER_NOT_DEFINED)'+ "<br>" +
+tab2 + '            raise'+ "<br>" +
+''+ "<br>" +
+tab + '    def get_chrome_driver_path(self):'+ "<br>" +
+tab1 + '        try:'+ "<br>" +
+tab2 + '            return self.testbed["chrome_driver_path"]'+ "<br>" +
+tab1 + '        except KeyError:'+ "<br>" +
+tab2 + '            log.info(self.BROWSER_DRIVER_PATH_NOT_DEFINED)'+ "<br>" +
+tab2 + '            raise'+ "<br>" +
+'      '+ "<br>" +
+tab + '    def get_url_details(self):'+ "<br>" +
+tab1 + '        try:'+ "<br>" +
+tab2 + '            return self.testbed["url"]'+ "<br>" +
+tab1 + '        except KeyError:'+ "<br>" +
+tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
+tab2 + '            raise'+ "<br>" +
+'        '+ "<br>" +
+tab + '    def load_yaml_file(self, script_name, script_location):'+ "<br>" +
+tab1 + '        try:'+ "<br>" +
+tab2 + '            script_name = script_name.replace("_test.py", ".yaml")'+ "<br><br>" +
+tab2 + '            log.info("script_name Data File Name: " + script_name)'+ "<br>" +
+tab2 + '            self.yaml_path = os.path.join(script_location, "dataset", script_name)'+ "<br>" +
+tab2 + '            dataFile = open(self.yaml_path, "r")'+ "<br>" +
+tab2 + '            self.dataValues = yaml.load(dataFile)'+ "<br>" +
+tab2 + '            final_dict = {}'+ "<br>" +
+tab2 + '            primary_keys = list(self.dataValues.keys())'+ "<br>" +
+tab2 + '            for i in range(len(primary_keys)):'+ "<br>" +
+tab3 + '                data = list(self.dataValues[primary_keys[i]])'+ "<br>" +
+tab3 + '                newdata = []'+ "<br>" +
+tab3 + '                for j in range(len(data)):'+ "<br>" +
+tab4 + '                    newdata.append(data[j])'+ "<br>" +
+tab3 + '                final_dict[primary_keys[i]] = newdata'+ "<br>" +
+tab2 + '            dataFile.close()    '+ "<br>" +
+tab1 + '        except Exception as e:'+ "<br>" +
+tab2 + '            log.info("Error occurred during reading yaml file : " + self.yaml_path)'+ "<br>" +
+tab2 + '            raise '+ "<br>" +
+tab1 + '        return final_dict'+ "<br>" +
+''+ "<br>" +
+tab + '    def login(self):'+ "<br>" +
+tab1 + '        browser = self.get_browser_details()'+ "<br>" +
+tab1 + '        url = self.get_url_details()'+ "<br>" +
+tab1 + '        log.info("Browser Type : " + browser)'+ "<br>" +
+tab1 + '        log.info("Application Under Test URL  " + url)'+ "<br>" +
+'  '+ "<br>" +
+tab1 + '        if browser.lower() == "chrome":'+ "<br>" +
+tab2 + '            self.chrome_driver_path = self.get_chrome_driver_path()'+ "<br>" +
+tab2 + '            log.info("chrome_driver_path : " + str(self.chrome_driver_path))'+ "<br>" +
+tab2 + '            self.driver = webdriver.Chrome(executable_path=self.chrome_driver_path)'+ "<br>" +
+tab1 + '        elif browser.lower() == "firefox":'+ "<br>" +
+tab2 + '            self.driver = webdriver.Firefox()'+ "<br>" +
+tab1 + '        else:'+ "<br>" +
+tab2 + '            log.info(browser + "Browser is not supported")'+ "<br>" +
+tab2 + '            raise'+ "<br>" +
+tab1 + '        self.driver.get(url)'+ "<br>" +
+tab1 + '        # self.driver.maximize_window();'+ "<br>" +
+tab1 + '        self.driver.implicitly_wait(5)  # seconds'+ "<br>" +
+tab1 + '        log.info("****** Successfully Navigated to url******")'+ "<br>" +
+tab1 + '        return self.driver'+ "<br>" +
+''+ "<br>" +
+tab + '    def import_from_dotted_path(self, dotted_names, path=None):'+ "<br>" +
+tab1 + '        """ import_from_dotted_path(\'foo.bar\') -> from foo import bar; return bar """'+ "<br>" +
+tab1 + '        next_module, remaining_names = dotted_names.split(\'.\', 1)'+ "<br>" +
+tab1 + '        fp, pathname, description = imp.find_module(next_module, path)'+ "<br>" +
+tab1 + '        module = imp.load_module(next_module, fp, pathname, description)'+ "<br>" +
+tab1 + '        if hasattr(module, remaining_names):'+ "<br>" +
+tab2 + '            return getattr(module, remaining_names)'+ "<br>" +
+tab1 + '        if \'.\' not in remaining_names:'+ "<br>" +
+tab2 + '            return module'+ "<br>" +
+tab1 + '        return self.import_from_dotted_path(remaining_names, path=module.__path__)'+ "<br>" +
+''+ "<br>" +
+'   '+ "<br>" +
+tab + '    def success_print(self, message):'+ "<br>" +
+tab1 + '        log.info(message)'+ "<br>" +
+tab1 + '        return True'+ "<br>" +
+'   '+ "<br>" +
+tab + '    def assert_equal(self, actual, expected, error_message=None, success_message=None):'+ "<br>" +
+tab1 + '        error_message = "Assertion Failed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Error Message : " + str(error_message)'+ "<br>" +
+tab1 + '        success_message = "Assertion Passed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Success Message : " + str(success_message)'+ "<br>" +
+tab1 + '        assert actual == expected and self.success_print(success_message), error_message'+ "<br>" +
+''+ "<br>" +
+'   '+ "<br>" +
+tab + '    def capture_failure(self, driver, testcasename):'+ "<br>" +
+tab1 + '        dirpath = os.getcwd()'+ "<br>" +
+tab1 + '        log.info("current directory is : " + dirpath)'+ "<br>" +
+tab1 + '        dirpath = dirpath + "/others"'+ "<br>" +
+tab1 + '        if not os.path.exists(dirpath):'+ "<br>" +
+tab2 + '            os.makedirs(dirpath)    '+ "<br>" +
+tab1 + '        log.info("Directory name is : " + dirpath)'+ "<br>" +
+tab1 + '        filename = testcasename + ".png"'+ "<br>" +
+tab1 + '        screen_path = os.path.join(dirpath , filename)'+ "<br>" +
+tab1 + '        log.info("screen_path : " + screen_path)'+ "<br>" +
+tab1 + '        driver.save_screenshot(screen_path)'+ "<br>" +
+tab1 + '        os.environ["Failure_ScreenShot"] = screen_path'+ "<br>" +
+tab1 + '        return screen_path'+ "<br>" +
+''+ "<br>" +
+tab + '    def get_testcase_names(self, data_values, data):'+ "<br>" +
+tab1 + '        testcase_list = []'+ "<br>" +
+tab1 + '        for i in range(len(data_values[data])):'+ "<br>" +
+tab2 + '            testcase_list.append((data_values[data][i]["testCase"], i))'+ "<br>" +
+tab1 + '        return testcase_list'+ "<br>" +
+''+ "<br>" +
+tab + '    def execute_test(self, test_suite):'+ "<br>" +
+tab1 + '        dirpath = os.getcwd()'+ "<br>" +
+tab1 + '        dirpath = dirpath + "/results"'+ "<br>" +
+tab1 + '        if not os.path.exists(dirpath):'+ "<br>" +
+tab2 + '            os.makedirs(dirpath)    '+ "<br>" +
+''+ "<br>" +
+tab1 + '        file_name = datetime.datetime.now().strftime("%Y_%m_%d_%H%M_report.html")'+ "<br>" +
+tab1 + '        file_name = dirpath + "/" + file_name'+ "<br>" +
+tab1 + '        output = open(file_name, "wb")'+ "<br>" +
+tab1 + '        runner = HTMLTestRunner(stream=output, verbosity=2, title="Regression Suite", dirTestScreenshots="/others")'+ "<br>" +
+tab1 + '        runner.run(test_suite)'+ "<br>" +
+tab1 + '        output.close()'; "<br>" 
+	
+
     
     
   lib_window = window.open("lib_window","com_MyDomain_lib")
@@ -3553,28 +3402,10 @@ function printServerDetails()
 if(localStorage.url == undefined)
   localStorage.url = ""
 
-  var deviceYamlDocumentContentStart = '# Save YAML file job\\device.yaml' + "<br>" + "<br>" +
-    '#Sample Yaml  file'+ "<br>" +  "<br>" +
-    'SELENIUM_SERVER_2:'+ "<br>" +
-    tab + '  browser: "chrome"'+ "<br>" +
-    tab + '  platform: "WINDOWS"'+ "<br>" +
-    tab + '  environment: "REMOTE"'+ "<br>" +
-    tab + '  url: "' + localStorage.url +  "\"<br>" +
-    tab + '  hub:'+ "<br>" +
-    tab1 + '    selenium_hub_path_to_jar: "/users/saimathe/Downloads/"'+ "<br>" +
-    tab1 + '    selnium_hub_jar_name: "selenium-server-standalone-2.50.1.jar"'+ "<br>" +
-    tab1 + '    selenium_hub_ip: "10.104.105.62"'+ "<br>" +
-    tab1 + '    selenium_hub_port: "4444"'+ "<br>" +
-    tab1 + '    hub_username: root'+ "<br>" +
-    tab1 + '    hub_password: "cisco123" '+ "<br>" +
-    tab1 + '    hub_scp_ip: "9.40.5.50"   '+ "<br>" +
-    tab + '  node:'+ "<br>" +
-    tab1 + '    selenium_node_ip: "10.104.105.100"'+ "<br>" +
-    tab1 + '    selenium_node_jar_name: "selenium-server-standalone-2.53.0.jar"'+ "<br>" +
-    tab1 + '    selenium_node_path_to_jar: "C:/Users/Administrator/Downloads/"'+ "<br>" +
-    tab1 + '    selenium_node_user: "Administrator"'+ "<br>" +
-    tab1 + '    selenium_node_password: "cisco123"'+ "<br>" +
-    tab1 + '    selenium_node_port: "5555"'; "<br>"
+  var deviceYamlDocumentContentStart = '# Save YAML file job\\system_properties.yaml' + "<br>" + "<br>" +
+    'browser: "chrome"'+ "<br>" +
+    'chrome_driver_path : "/Users/anpradha/Downloads/chromedriver"'+ "<br>" +
+    '  url: "' + localStorage.url +  "\"<br>"
   
     
   device_window = window.open("device_yaml_window","com_MyDomain_device")
@@ -3589,7 +3420,7 @@ function printJob()
 {
  
   currentClassName = capitalize(sessionStorage.pageName)
-  var currentTestName  = currentClassName.toLowerCase() +"_test.py"
+  var currentTestName  = currentClassName.toLowerCase() +"_test"
  
   htmlBody = "<html><head><meta charset=\"UTF-8\"><title>Job FIle </title>"+
   "<style>"+
@@ -3616,44 +3447,32 @@ function printJob()
   "tab1 { padding-left: 4em; }" +
   "</style></head><body>";
 
-  var jobDocumentContentStart = "# Please Save this File as job\\" +
-  currentClassName.toLowerCase() + "_job.py" +"</br></br>" + 
-   '   import os </br> '  +
-   '   from ats.easypy import run </br> '  +
-   '   import sys </br> '  +
-   '   sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) </br> '  +
-   '   from library.lib import FlexLib </br> '  +
-   '     </br>'  +
-   '     </br> '  +
-   '     </br> '  +
-   '   for i in range(len(sys.argv)):  </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;if "config_file" in sys.argv[i]:  </br> '  +
-   '           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;os.environ["TESTBED"] = sys.argv[i+1]  </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;elif "ctlr" in sys.argv[i]:  </br>'  +
-   '           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;os.environ["CTLR"] = sys.argv[i+1]  </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;elif "selenium_server" in sys.argv[i]:  </br>'  +
-   '           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;os.environ["SELENIUM_SERVER"] = sys.argv[i+1]  </br>'  +
-   '     </br>'  +
-   //'   flex_lib_obj = FlexLib()  </br>'  +
-   //'   version = flex_lib_obj.get_version()  </br>'  +
-   //'   #setting the version of the device  </br>'  +
-   //'   os.environ["DEVICE_VERSION"] = version  </br>'  +
-   '     </br>'  +
-   '     </br>'  +
-   '     </br>'  +
-   '   # All run() must be inside a main function  </br>'  +
-   '   def main():  </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;# Find the location of the script in relation to the job file  </br> '  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;test_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  </br>'  +
-   "       &nbsp;&nbsp;&nbsp;&nbsp;testscript = os.path.join(test_path, \"testcase\","+
-           "'" + currentTestName + "')"+
-           "  </br>"  +
-   '     </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;# Execute the testscript  </br>'  +
-   '       &nbsp;&nbsp;&nbsp;&nbsp;run(testscript=testscript)  </br>'  +
-   '    ' ;
- 
- 
+var jobDocumentContentStart = "# Please Save this File as job\\" +
+currentClassName.toLowerCase() + "_job.py" +"</br></br>" + 
+'# !/bin/env python  </br> '+
+'import unittest </br>'+
+'import os</br>'+
+'import sys</br>'+
+'sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</br>'+
+'from library.lib import FlexLib</br>'+
+'</br> </br>'+
+'flex_lib_obj = FlexLib() </br> </br>'+
+''+
+''+
+'class MyTestSuite(unittest.TestCase): </br> </br>'+
+' '+
+'    &nbsp;&nbsp;&nbsp;&nbsp;def test_issue(self): </br> </br>'+
+''+
+'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# List all tests with testFileName.TestClassName </br>'+
+'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test = unittest.TestLoader().loadTestsFromTestCase(flex_lib_obj.import_from_dotted_path(\"testcase.'+ currentTestName + '.' + currentClassName + "Testcases" + '\")) </br> </br>'+
+'        '+
+'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# create a test suite  </br>'+
+'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_suite = unittest.TestSuite([test]) </br> </br>'+
+''+
+'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex_lib_obj.execute_test(test_suite)</br>'+
+''+
+'if __name__ == \'__main__\': </br>'+
+'    &nbsp;&nbsp;&nbsp;&nbsp;unittest.main() </br>';
  
   job_window = window.open("job_window","com_MyDomain_job")
   job_window.document.write('');  
@@ -3991,43 +3810,34 @@ function printSpecFileForManual()
 
   var specDocumentContentStartManual = "# Please Save this File as testcase\\" +
   currentClassName.toLowerCase() + "_test.py" +"</br></br>"+
-  "__author__ = 'vnagaman' </br>"+
+  "__author__ = 'anpradha' </br>"+
   '#!/bin/env python </br>'+
-  '# To get a logger for the script</br>'+
-  'import logging</br>'+
-  ''+
-  '# Needed for aetest script</br>'+
-  'from ats import aetest</br>'+
-  'from selenium import webdriver</br>'+
   'import time</br>'+
   'from script.'+ currentPageFileName +' '+
-  'import *</br>'+
-  'import yaml</br>'+
-  'from library.lib import *</br>'+
+  'import *</br>'+  
+  'import unittest</br>'+
+  'from ddt import ddt, idata</br>'+
   'import traceback</br>'+
   '</br></br>'+
   '# Get your logger for your script</br>'+
-  'log = logging.getLogger(__name__)</br></br>'+
+  'log = custom_logger(__name__)</br></br>'+
   ''+
   'flexlib_obj = FlexLib()</br>'+
   'dataValues = flexlib_obj.load_yaml_file(os.path.basename(__file__), os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</br>'+
   '</br>'+
   '</br>'+
-  'class ' + specClassName + '(aetest.Testcase):</br>'+
+  '@ddt</br>'+
+  'class ' + specClassName + '(unittest.TestCase):</br>'+
   '    &nbsp;&nbsp""" This is user Testcases section """</br></br>'+
   ''+
   '    &nbsp;&nbsp;# This is how to create a setup section</br>'+
-  '    &nbsp;&nbsp;@aetest.setup</br>'+
-  '    &nbsp;&nbsp;def prepare_testcase(self, section):</br>'+
+  '    &nbsp;&nbsp;@classmethod</br>'+
+  '    &nbsp;&nbsp;def setUpClass(self):</br>'+
   '        &nbsp;&nbsp;&nbsp;&nbsp;""" Testcase Setup section """</br>'+
-  //'        &nbsp;&nbsp;&nbsp;&nbsp;flexlib_obj.get_version()</br>'+
   '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Preparing the test")</br>'+
   '        &nbsp;&nbsp;&nbsp;&nbsp;self.obj = ' +  currentClassName + '()</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;flexlib_obj.stop_selenium_server()</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;flexlib_obj.start_selenium_server()</br>'+
   '        &nbsp;&nbsp;&nbsp;&nbsp;self.driver = flexlib_obj.login()</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("subtest setup")</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;log.info(section)</br>'
+  '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Setup Successful")</br>'
 
   
   specDocumentContentStartManual  =  specDocumentContentStartManual  + '&nbsp;&nbsp;&nbsp;&nbsp;self.' + sessionStorage.pageName + '_operation' + '_dataSet = dataValues["' + sessionStorage.pageName + '_operation' + '"]</br>'
@@ -4036,13 +3846,11 @@ function printSpecFileForManual()
   specDocumentContentStartManual  =  specDocumentContentStartManual  + 
     '</br>'+
     '</br>'+
-    '&nbsp;&nbsp;#@aetest.skipIf((flexlib_obj.current_version() in ["skip_verison"]), \'Not supported\')</br>'+
-    '    &nbsp;&nbsp;@aetest.loop(count=flexlib_obj.get_data_count(dataValues, "' + nameOfData + '"), ids=flexlib_obj.get_testcase_names(dataValues, "'+ nameOfData + '"))</br>'+
-    '    &nbsp;&nbsp;@ aetest.test</br>'+
-    '    &nbsp;&nbsp;def '+sessionStorage.pageName + '_operation_test(self, count):</br>'+
+    '&nbsp;&nbsp;@idata(flexlib_obj.get_testcase_names(dataValues, "' + nameOfData + '"))</br>'+
+    '    &nbsp;&nbsp;def test_'+sessionStorage.pageName + '_operation(self, data_tup):</br>'+
     '        &nbsp;&nbsp;&nbsp;&nbsp;""" add description about the test """</br>'+
     '        &nbsp;&nbsp;&nbsp;&nbsp;try:</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data = self.' + sessionStorage.pageName + '_operation_dataSet[count]</br>'
+    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data = self.' + sessionStorage.pageName + '_operation_dataSet[data_tup[1]]</br>'
 
     
     specDocumentContentStartManual  =  specDocumentContentStartManual + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
@@ -4050,24 +3858,19 @@ function printSpecFileForManual()
 
 
     specDocumentContentStartManual  =  specDocumentContentStartManual  +
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Subtest test")</br>'+
+    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Subtest test Section")</br>'+
     '        &nbsp;&nbsp;&nbsp;&nbsp;except Exception as e:</br>'+
     '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Exception Occured - %s" % (traceback.format_exc().splitlines()))</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, log, data["testCase"])</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.failed("Exception Occured - %s" % e)</br></br></br>'
+    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, data_tup[0])</br>'+
+    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fail("Exception Occurred - %s" % e)</br></br></br>'
 
   specDocumentContentStartManual =  specDocumentContentStartManual  +
     '    &nbsp;&nbsp;# This is how to create a cleanup section</br>'+
-    '    &nbsp;&nbsp;@aetest.cleanup</br>'+
-    '    &nbsp;&nbsp;def clean_testcase(self):</br>'+
+    '    &nbsp;&nbsp;@classmethod</br>'+
+    '    &nbsp;&nbsp;def tearDownClass(self):</br>'+
     '        &nbsp;&nbsp;&nbsp;&nbsp;""" Testcase cleanup section """</br>'+
     '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Pass testcase cleanup")</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;flexlib_obj.istanbul_code_coverage(self.driver, "' + sessionStorage.pageName.toLowerCase() + '")</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;self.driver.quit()</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;flexlib_obj.stop_selenium_server()</br>'+
-    '</br></br>'+
-    'if __name__ == \'__main__\':  # pragma: no cover</br>'+
-    '    &nbsp;&nbsp;aetest.main()</br>';
+    '        &nbsp;&nbsp;&nbsp;&nbsp;self.driver.quit()</br>'
 
   spec_window = window.open("spec_window","com_MyDomain_spec")
   spec_window.document.write('');    

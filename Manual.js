@@ -1,4 +1,3 @@
-
  (function() {
   var locatorDocumentContent = ""
   var scriptDocumentContent = ""
@@ -2503,7 +2502,8 @@ function seleniumCommandHelper(identifierName,locator,EventType)
    if (elementReferenceEvent[EventType] == 'send_keys')
    { 
         // driver.find_element_by_id(self.label).send(self.label)
-       seleniumCommand = "driver." +seleniumReferenceCommand[identifierName]+"(self."+locator+")."+elementReferenceEvent[EventType]+"(data['"+locator+"'])"
+       //seleniumCommand =  "driver." +seleniumReferenceCommand[identifierName]+"(self."+locator+")."+elementReferenceEvent[EventType]+"(data['"+locator+"'])"
+       seleniumCommand =  "for var in data['" + locator + "']:time.sleep(.1);driver." +seleniumReferenceCommand[identifierName]+"(self."+locator+")."+elementReferenceEvent[EventType]+"(var);"
        return seleniumCommand
    }
    else
@@ -3296,7 +3296,7 @@ tab1 + '        else:'+ "<br>" +
 tab2 + '            log.info(browser + "Browser is not supported")'+ "<br>" +
 tab2 + '            raise'+ "<br>" +
 tab1 + '        self.driver.get(url)'+ "<br>" +
-tab1 + '        # self.driver.maximize_window();'+ "<br>" +
+tab1 + '        self.driver.maximize_window();'+ "<br>" +
 tab1 + '        self.driver.implicitly_wait(5)  # seconds'+ "<br>" +
 tab1 + '        log.info("****** Successfully Navigated to url******")'+ "<br>" +
 tab1 + '        return self.driver'+ "<br>" +

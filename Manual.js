@@ -2939,7 +2939,14 @@ function printHTMLFooter(window_handle)
   '<div style="font-size: 1.5em;padding-left: 15em;">1. Please have lib.py and HTMLTestRunner.py under library Folder</div></br>'+
   '<div style="font-size: 1.5em;padding-left: 15em;">2. User Need to be in Parent Folder of Job/dataset/Job/Script File</div>'+
   '<div style="font-size: 1.5em;padding-left: 15em;">3. Execute Command : python3 -m unittest -v job/democlass_job.py</div></br>'+
-  '<div style="font-size: 1.5em;padding-left: 10em;">****************************************************************************************************** </div>'
+  '<div style="font-size: 1.5em;padding-left: 10em;">****************************************************************************************************** </div>'+
+  "<iframe id='LocatorFile' style='display: none;'></iframe>" + 
+  "<iframe id='DataFile' style='display: none;'></iframe>" + 
+  "<iframe id='ScriptFile' style='display: none;'></iframe>" + 
+  "<iframe id='SpecFile' style='display: none;'></iframe>" + 
+  "<iframe id='JobFile' style='display: none;'></iframe>" + 
+  "<iframe id='LibraryFile' style='display: none;'></iframe>" + 
+  "<iframe id='ServerFile' style='display: none;'></iframe>" 
 
   window_handle.document.write(htmlFooter)
   window_handle.document.write(htmlActionButton)
@@ -3000,14 +3007,16 @@ function printLocator()
   "&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):" + "</br>" +
   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FlexLib.__init__(self)" + "</br>"
  
-  locatorDocumentContentEnd = ""
-  locator_window = window.open("locator_window","com_MyDomain_locator")
-  locator_window.document.write('');
-  locator_window.document.write(htmlBody)
-  if(sessionStorage.addNewScenario == "false")
-    locator_window.document.write(locatorDocumentContentStart)
-  locator_window.document.write(sessionStorage.locatorDocumentContent)
   
+
+  var locatorFileName = currentClassName.toLowerCase() + "_locator.py"
+  window_handle.document.getElementById("LocatorFile").contentWindow.document.write('')
+  window_handle.document.getElementById("LocatorFile").contentWindow.document.write(htmlBody)
+  if(sessionStorage.addNewScenario == "false")
+    window_handle.document.getElementById("LocatorFile").contentWindow.document.write(locatorDocumentContentStart)
+  window_handle.document.getElementById("LocatorFile").contentWindow.document.write(sessionStorage.locatorDocumentContent)
+  var locatorContent = window_handle.document.getElementById("LocatorFile").contentWindow.document.body.innerText
+  saveFile(locatorContent,locatorFileName)  
 }
  
 function printScriptManual()
@@ -3064,39 +3073,41 @@ function printScriptManual()
   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ currentLocatorClassName +
   ".__init__(self)" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</br>" + "</br>" +  "</br>" +
   tab +  'def generateLocator(self,indentifier,locator):'+ "<br>" +
-  tab1 + '    actual = ""'+ "<br>" +
-  tab1 + '    names  = indentifier.split("  ")'+ "<br>" +
-  tab1 + '    for i in range(len(names)):'+ "<br>" +
-  tab2 + '        actual = actual + "contains(.,\'"+names[i]+"\')"'+ "<br>" +
-  tab2 + '        if (i< len(names) -1):'+ "<br>" +
-  tab3 + '            actual = actual + " and "'+ "<br>" +
-  tab1 + '    locator = locator.replace("IDENTIFIER", actual)'+ "<br>" +
-  tab1 + '    return locator'; "<br>" 
+  tab1 + 'actual = ""'+ "<br>" +
+  tab1 + 'names  = indentifier.split("  ")'+ "<br>" +
+  tab1 + 'for i in range(len(names)):'+ "<br>" +
+  tab2 + 'actual = actual + "contains(.,\'"+names[i]+"\')"'+ "<br>" +
+  tab2 + 'if (i< len(names) -1):'+ "<br>" +
+  tab3 + 'actual = actual + " and "'+ "<br>" +
+  tab1 + 'locator = locator.replace("IDENTIFIER", actual)'+ "<br>" +
+  tab1 + 'return locator'; "<br>" 
 
 
   var scriptFunctionStart = "</br></br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def " + sessionStorage.pageName + "_operation(self,driver,data):" + "</br>"
 
-  script_window = window.open("script_window","com_MyDomain_script")
-  // To Clear the content each time
-  script_window.document.write('');
-  script_window.document.write(htmlBody)
+  var scriptFileName = currentClassName.toLowerCase() + ".py"
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write('')
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write(htmlBody)
   if(sessionStorage.addNewScenario == "false")
   {
-    script_window.document.write(scriptDocumentContentStart)
+    window_handle.document.getElementById("ScriptFile").contentWindow.document.write(scriptDocumentContentStart)
   }
-  script_window.document.write(scriptFunctionStart)
-
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write(scriptFunctionStart)
   sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info(\"****** Operation Completed *****\")</br></br>","")
   sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "log.info(\"****** Operation Completed *****\")" + "</br></br>"
-  script_window.document.write(sessionStorage.functionContentManual)
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write(sessionStorage.functionContentManual)
 
   var verifyFunctionContentStart = "</br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def verify_" +sessionStorage.pageName + "_operation(self,driver,data):" + "&nbsp;&nbsp;&nbsp;&nbsp;</br>" + 
   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "#driver.refresh()</br></br>"
 
-  script_window.document.write(verifyFunctionContentStart)
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write(verifyFunctionContentStart)
+
   sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info(\"******  Verification for operation Completed *****\")</br></br>","")  
   sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "log.info(\"******  Verification for operation Completed *****\")" + "</br></br>"    
-  script_window.document.write(sessionStorage.verifyFunctionContentManual)
+  window_handle.document.getElementById("ScriptFile").contentWindow.document.write(sessionStorage.verifyFunctionContentManual)
+
+  var scriptContent = window_handle.document.getElementById("ScriptFile").contentWindow.document.body.innerText
+  saveFile(scriptContent,scriptFileName)  
 }
 
    
@@ -3208,162 +3219,161 @@ var libDocumentContentStart = "# Please Save this File as " + "\\library\\lib.py
 ''+ "<br>" +
 ''+ "<br>" +
 'def custom_logger(name):'+ "<br>" +
-tab + '    formatter = logging.Formatter(fmt=\'%(asctime)s %(levelname)-8s %(message)s\','+ "<br>" +
-'                                  datefmt=\'%Y-%m-%d %H:%M:%S\')'+ "<br>" +
-tab + '    dirpath = os.getcwd()'+ "<br>" +
-tab + '    dirpath = dirpath + "/results"'+ "<br>" +
-tab + '    if not os.path.exists(dirpath):'+ "<br>" +
-tab1 + '        os.makedirs(dirpath)    '+ "<br>" +
-tab + '    handler = logging.FileHandler(dirpath + "/" + \'log.txt\', mode=\'w\')'+ "<br>" +
-tab + '    handler.setFormatter(formatter)'+ "<br>" +
-tab + '    screen_handler = logging.StreamHandler(stream=sys.stdout)  '+ "<br>" +
-tab + '    screen_handler.setFormatter(formatter)'+ "<br>" +
-tab + '    logger = logging.getLogger(name)'+ "<br>" +
-tab + '    logger.setLevel(logging.INFO)'+ "<br>" +
-tab + '    logger.addHandler(handler)'+ "<br>" +
-tab + '    logger.addHandler(screen_handler)'+ "<br>" +
-tab + '    return logger'+ "<br>" +
+tab + 'formatter = logging.Formatter(fmt=\'%(asctime)s %(levelname)-8s %(message)s\','+ "<br>" +'datefmt=\'%Y-%m-%d %H:%M:%S\')'+ "<br>" +
+tab + 'dirpath = os.getcwd()'+ "<br>" +
+tab + 'dirpath = dirpath + "/results"'+ "<br>" +
+tab + 'if not os.path.exists(dirpath):'+ "<br>" +
+tab1 + 'os.makedirs(dirpath)    '+ "<br>" +
+tab + 'handler = logging.FileHandler(dirpath + "/" + \'log.txt\', mode=\'w\')'+ "<br>" +
+tab + 'handler.setFormatter(formatter)'+ "<br>" +
+tab + 'screen_handler = logging.StreamHandler(stream=sys.stdout)  '+ "<br>" +
+tab + 'screen_handler.setFormatter(formatter)'+ "<br>" +
+tab + 'logger = logging.getLogger(name)'+ "<br>" +
+tab + 'logger.setLevel(logging.INFO)'+ "<br>" +
+tab + 'logger.addHandler(handler)'+ "<br>" +
+tab + 'logger.addHandler(screen_handler)'+ "<br>" +
+tab + 'return logger'+ "<br>" +
 ''+ "<br>" +
 ''+ "<br>" +
 'log = custom_logger(__name__)'+ "<br>" +
 ''+ "<br>" +
 ''+ "<br>" +
 'class FlexLib:'+ "<br>" +
-tab + '    BROWSER_NOT_DEFINED = """ Browser Detail not Provided Please Provide Browser Detail in /job/system_properties.yaml file e.g browser: \'chrome\'"""'+ "<br>" +
-tab + '    BROWSER_DRIVER_PATH_NOT_DEFINED = """ Browser Driver Path Detail not Provided Please Provide Browser Driver Path Detail in /job/system_properties.yaml file e.g chrome_driver_path: \'/Users/anpradha/Downloads/chromedriver\'"""'+ "<br>" +
-tab + '    URL_NOT_DEFINED = """ URL Detail not Provided Please Provide URL Detail in /job/system_properties.yaml file e.g url: \'www.goole.com\'"""'+ "<br>" +
+tab + 'BROWSER_NOT_DEFINED = """ Browser Detail not Provided Please Provide Browser Detail in /job/system_properties.yaml file e.g browser: \'chrome\'"""'+ "<br>" +
+tab + 'BROWSER_DRIVER_PATH_NOT_DEFINED = """ Browser Driver Path Detail not Provided Please Provide Browser Driver Path Detail in /job/system_properties.yaml file e.g chrome_driver_path: \'/Users/anpradha/Downloads/chromedriver\'"""'+ "<br>" +
+tab + 'URL_NOT_DEFINED = """ URL Detail not Provided Please Provide URL Detail in /job/system_properties.yaml file e.g url: \'www.goole.com\'"""'+ "<br>" +
 ''+ "<br>" +
-tab + '    def __init__(self):'+ "<br>" +
-tab1 + '        self.testbedFile = open("./job/system_properties.yaml", "r")'+ "<br>" +
-tab1 + '        self.testbed = yaml.load(self.testbedFile)'+ "<br>" +
-tab1 + '        self.testbedFile.close()'+ "<br>" +
+tab + 'def __init__(self):'+ "<br>" +
+tab1 + 'self.testbedFile = open("./job/system_properties.yaml", "r")'+ "<br>" +
+tab1 + 'self.testbed = yaml.load(self.testbedFile)'+ "<br>" +
+tab1 + 'self.testbedFile.close()'+ "<br>" +
 ''+ "<br>" +
-tab + '    def get_browser_details(self):'+ "<br>" +
-tab1 + '        try:'+ "<br>" +
-tab2 + '            return self.testbed["browser"]'+ "<br>" +
-tab1 + '        except KeyError:'+ "<br>" +
-tab2 + '            log.info(self.BROWSER_NOT_DEFINED)'+ "<br>" +
-tab2 + '            raise'+ "<br>" +
+tab + 'def get_browser_details(self):'+ "<br>" +
+tab1 + 'try:'+ "<br>" +
+tab2 + 'return self.testbed["browser"]'+ "<br>" +
+tab1 + 'except KeyError:'+ "<br>" +
+tab2 + 'log.info(self.BROWSER_NOT_DEFINED)'+ "<br>" +
+tab2 + 'raise'+ "<br>" +
 ''+ "<br>" +
-tab + '    def get_chrome_driver_path(self):'+ "<br>" +
-tab1 + '        try:'+ "<br>" +
-tab2 + '            return self.testbed["chrome_driver_path"]'+ "<br>" +
-tab1 + '        except KeyError:'+ "<br>" +
-tab2 + '            log.info(self.BROWSER_DRIVER_PATH_NOT_DEFINED)'+ "<br>" +
-tab2 + '            raise'+ "<br>" +
-'      '+ "<br>" +
-tab + '    def get_url_details(self):'+ "<br>" +
-tab1 + '        try:'+ "<br>" +
-tab2 + '            return self.testbed["url"]'+ "<br>" +
-tab1 + '        except KeyError:'+ "<br>" +
-tab2 + '            log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
-tab2 + '            raise'+ "<br>" +
-'        '+ "<br>" +
-tab + '    def load_yaml_file(self, script_name, script_location):'+ "<br>" +
-tab1 + '        try:'+ "<br>" +
-tab2 + '            script_name = script_name.replace("_test.py", ".yaml")'+ "<br><br>" +
-tab2 + '            log.info("script_name Data File Name: " + script_name)'+ "<br>" +
-tab2 + '            self.yaml_path = os.path.join(script_location, "dataset", script_name)'+ "<br>" +
-tab2 + '            dataFile = open(self.yaml_path, "r")'+ "<br>" +
-tab2 + '            self.dataValues = yaml.load(dataFile)'+ "<br>" +
-tab2 + '            final_dict = {}'+ "<br>" +
-tab2 + '            primary_keys = list(self.dataValues.keys())'+ "<br>" +
-tab2 + '            for i in range(len(primary_keys)):'+ "<br>" +
-tab3 + '                data = list(self.dataValues[primary_keys[i]])'+ "<br>" +
-tab3 + '                newdata = []'+ "<br>" +
-tab3 + '                for j in range(len(data)):'+ "<br>" +
-tab4 + '                    newdata.append(data[j])'+ "<br>" +
-tab3 + '                final_dict[primary_keys[i]] = newdata'+ "<br>" +
-tab2 + '            dataFile.close()    '+ "<br>" +
-tab1 + '        except Exception as e:'+ "<br>" +
-tab2 + '            log.info("Error occurred during reading yaml file : " + self.yaml_path)'+ "<br>" +
-tab2 + '            raise '+ "<br>" +
-tab1 + '        return final_dict'+ "<br>" +
+tab + 'def get_chrome_driver_path(self):'+ "<br>" +
+tab1 + 'try:'+ "<br>" +
+tab2 + 'return self.testbed["chrome_driver_path"]'+ "<br>" +
+tab1 + 'except KeyError:'+ "<br>" +
+tab2 + 'log.info(self.BROWSER_DRIVER_PATH_NOT_DEFINED)'+ "<br>" +
+tab2 + 'raise'+ "<br>" +
+'      '+"<br>" +
+tab + 'def get_url_details(self):'+ "<br>" +
+tab1 + 'try:'+ "<br>" +
+tab2 + 'return self.testbed["url"]'+ "<br>" +
+tab1 + 'except KeyError:'+ "<br>" +
+tab2 + 'log.info(self.SELNIUM_SERVER_NOT_DEFINED)'+ "<br>" +
+tab2 + 'raise'+ "<br>" +
 ''+ "<br>" +
-tab + '    def login(self):'+ "<br>" +
-tab1 + '        browser = self.get_browser_details()'+ "<br>" +
-tab1 + '        url = self.get_url_details()'+ "<br>" +
-tab1 + '        log.info("Browser Type : " + browser)'+ "<br>" +
-tab1 + '        log.info("Application Under Test URL  " + url)'+ "<br>" +
-'  '+ "<br>" +
-tab1 + '        if browser.lower() == "chrome":'+ "<br>" +
-tab2 + '            self.chrome_driver_path = self.get_chrome_driver_path()'+ "<br>" +
-tab2 + '            log.info("chrome_driver_path : " + str(self.chrome_driver_path))'+ "<br>" +
-tab2 + '            self.driver = webdriver.Chrome(executable_path=self.chrome_driver_path)'+ "<br>" +
-tab1 + '        elif browser.lower() == "firefox":'+ "<br>" +
-tab2 + '            self.driver = webdriver.Firefox()'+ "<br>" +
-tab1 + '        else:'+ "<br>" +
-tab2 + '            log.info(browser + "Browser is not supported")'+ "<br>" +
-tab2 + '            raise'+ "<br>" +
-tab1 + '        self.driver.get(url)'+ "<br>" +
-tab1 + '        self.driver.maximize_window();'+ "<br>" +
-tab1 + '        self.driver.implicitly_wait(5)  # seconds'+ "<br>" +
-tab1 + '        log.info("****** Successfully Navigated to url******")'+ "<br>" +
-tab1 + '        return self.driver'+ "<br>" +
+tab + 'def load_yaml_file(self, script_name, script_location):'+ "<br>" +
+tab1 + 'try:'+ "<br>" +
+tab2 + 'script_name = script_name.replace("_test.py", ".yaml")'+ "<br><br>" +
+tab2 + 'log.info("script_name Data File Name: " + script_name)'+ "<br>" +
+tab2 + 'self.yaml_path = os.path.join(script_location, "dataset", script_name)'+ "<br>" +
+tab2 + 'dataFile = open(self.yaml_path, "r")'+ "<br>" +
+tab2 + 'self.dataValues = yaml.load(dataFile)'+ "<br>" +
+tab2 + 'final_dict = {}'+ "<br>" +
+tab2 + 'primary_keys = list(self.dataValues.keys())'+ "<br>" +
+tab2 + 'for i in range(len(primary_keys)):'+ "<br>" +
+tab3 + 'data = list(self.dataValues[primary_keys[i]])'+ "<br>" +
+tab3 + 'newdata = []'+ "<br>" +
+tab3 + 'for j in range(len(data)):'+ "<br>" +
+tab4 + 'newdata.append(data[j])'+ "<br>" +
+tab3 + 'final_dict[primary_keys[i]] = newdata'+ "<br>" +
+tab2 + 'dataFile.close()    '+ "<br>" +
+tab1 + 'except Exception as e:'+ "<br>" +
+tab2 + 'log.info("Error occurred during reading yaml file : " + self.yaml_path)'+ "<br>" +
+tab2 + 'raise '+ "<br>" +
+tab1 + 'return final_dict'+ "<br>" +
 ''+ "<br>" +
-tab + '    def import_from_dotted_path(self, dotted_names, path=None):'+ "<br>" +
-tab1 + '        """ import_from_dotted_path(\'foo.bar\') -> from foo import bar; return bar """'+ "<br>" +
-tab1 + '        next_module, remaining_names = dotted_names.split(\'.\', 1)'+ "<br>" +
-tab1 + '        fp, pathname, description = imp.find_module(next_module, path)'+ "<br>" +
-tab1 + '        module = imp.load_module(next_module, fp, pathname, description)'+ "<br>" +
-tab1 + '        if hasattr(module, remaining_names):'+ "<br>" +
-tab2 + '            return getattr(module, remaining_names)'+ "<br>" +
-tab1 + '        if \'.\' not in remaining_names:'+ "<br>" +
-tab2 + '            return module'+ "<br>" +
-tab1 + '        return self.import_from_dotted_path(remaining_names, path=module.__path__)'+ "<br>" +
+tab + 'def login(self):'+ "<br>" +
+tab1 + 'browser = self.get_browser_details()'+ "<br>" +
+tab1 + 'url = self.get_url_details()'+ "<br>" +
+tab1 + 'log.info("Browser Type : " + browser)'+ "<br>" +
+tab1 + 'log.info("Application Under Test URL  " + url)'+ "<br>" +
 ''+ "<br>" +
-'   '+ "<br>" +
-tab + '    def success_print(self, message):'+ "<br>" +
-tab1 + '        log.info(message)'+ "<br>" +
-tab1 + '        return True'+ "<br>" +
-'   '+ "<br>" +
-tab + '    def assert_equal(self, actual, expected, error_message=None, success_message=None):'+ "<br>" +
-tab1 + '        error_message = "Assertion Failed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Error Message : " + str(error_message)'+ "<br>" +
-tab1 + '        success_message = "Assertion Passed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Success Message : " + str(success_message)'+ "<br>" +
-tab1 + '        assert actual == expected and self.success_print(success_message), error_message'+ "<br>" +
+tab1 + 'if browser.lower() == "chrome":'+ "<br>" +
+tab2 + 'self.chrome_driver_path = self.get_chrome_driver_path()'+ "<br>" +
+tab2 + 'log.info("chrome_driver_path : " + str(self.chrome_driver_path))'+ "<br>" +
+tab2 + 'self.driver = webdriver.Chrome(executable_path=self.chrome_driver_path)'+ "<br>" +
+tab1 + 'elif browser.lower() == "firefox":'+ "<br>" +
+tab2 + 'self.driver = webdriver.Firefox()'+ "<br>" +
+tab1 + 'else:'+ "<br>" +
+tab2 + 'log.info(browser + "Browser is not supported")'+ "<br>" +
+tab2 + 'raise'+ "<br>" +
+tab1 + 'self.driver.get(url)'+ "<br>" +
+tab1 + 'self.driver.maximize_window();'+ "<br>" +
+tab1 + 'self.driver.implicitly_wait(5)  # seconds'+ "<br>" +
+tab1 + 'log.info("****** Successfully Navigated to url******")'+ "<br>" +
+tab1 + 'return self.driver'+ "<br>" +
+''+ "<br>" +
+tab + 'def import_from_dotted_path(self, dotted_names, path=None):'+ "<br>" +
+tab1 + '""" import_from_dotted_path(\'foo.bar\') -> from foo import bar; return bar """'+ "<br>" +
+tab1 + 'next_module, remaining_names = dotted_names.split(\'.\', 1)'+ "<br>" +
+tab1 + 'fp, pathname, description = imp.find_module(next_module, path)'+ "<br>" +
+tab1 + 'module = imp.load_module(next_module, fp, pathname, description)'+ "<br>" +
+tab1 + 'if hasattr(module, remaining_names):'+ "<br>" +
+tab2 + 'return getattr(module, remaining_names)'+ "<br>" +
+tab1 + 'if \'.\' not in remaining_names:'+ "<br>" +
+tab2 + 'return module'+ "<br>" +
+tab1 + 'return self.import_from_dotted_path(remaining_names, path=module.__path__)'+ "<br>" +
 ''+ "<br>" +
 '   '+ "<br>" +
-tab + '    def capture_failure(self, driver, testcasename):'+ "<br>" +
-tab1 + '        dirpath = os.getcwd()'+ "<br>" +
-tab1 + '        log.info("current directory is : " + dirpath)'+ "<br>" +
-tab1 + '        dirpath = dirpath + "/others"'+ "<br>" +
-tab1 + '        if not os.path.exists(dirpath):'+ "<br>" +
-tab2 + '            os.makedirs(dirpath)    '+ "<br>" +
-tab1 + '        log.info("Directory name is : " + dirpath)'+ "<br>" +
-tab1 + '        filename = testcasename + ".png"'+ "<br>" +
-tab1 + '        screen_path = os.path.join(dirpath , filename)'+ "<br>" +
-tab1 + '        log.info("screen_path : " + screen_path)'+ "<br>" +
-tab1 + '        driver.save_screenshot(screen_path)'+ "<br>" +
-tab1 + '        os.environ["Failure_ScreenShot"] = screen_path'+ "<br>" +
-tab1 + '        return screen_path'+ "<br>" +
+tab + 'def success_print(self, message):'+ "<br>" +
+tab1 + 'log.info(message)'+ "<br>" +
+tab1 + 'return True'+ "<br>" +
+'   '+ "<br>" +
+tab + 'def assert_equal(self, actual, expected, error_message=None, success_message=None):'+ "<br>" +
+tab1 + 'error_message = "Assertion Failed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Error Message : " + str(error_message)'+ "<br>" +
+tab1 + 'success_message = "Assertion Passed : Actual value : " + str(actual) + " , Expected Value : " + str(expected) + ", Success Message : " + str(success_message)'+ "<br>" +
+tab1 + 'assert actual == expected and self.success_print(success_message), error_message'+ "<br>" +
 ''+ "<br>" +
-tab + '    def get_testcase_names(self, data_values, data):'+ "<br>" +
-tab1 + '        testcase_list = []'+ "<br>" +
-tab1 + '        for i in range(len(data_values[data])):'+ "<br>" +
-tab2 + '            testcase_list.append((data_values[data][i]["testCase"], i))'+ "<br>" +
-tab1 + '        return testcase_list'+ "<br>" +
+'   '+ "<br>" +
+tab + 'def capture_failure(self, driver, testcasename):'+ "<br>" +
+tab1 + 'dirpath = os.getcwd()'+ "<br>" +
+tab1 + 'log.info("current directory is : " + dirpath)'+ "<br>" +
+tab1 + 'dirpath = dirpath + "/others"'+ "<br>" +
+tab1 + 'if not os.path.exists(dirpath):'+ "<br>" +
+tab2 + 'os.makedirs(dirpath)    '+ "<br>" +
+tab1 + 'log.info("Directory name is : " + dirpath)'+ "<br>" +
+tab1 + 'filename = testcasename + ".png"'+ "<br>" +
+tab1 + 'screen_path = os.path.join(dirpath , filename)'+ "<br>" +
+tab1 + 'log.info("screen_path : " + screen_path)'+ "<br>" +
+tab1 + 'driver.save_screenshot(screen_path)'+ "<br>" +
+tab1 + 'os.environ["Failure_ScreenShot"] = screen_path'+ "<br>" +
+tab1 + 'return screen_path'+ "<br>" +
 ''+ "<br>" +
-tab + '    def execute_test(self, test_suite):'+ "<br>" +
-tab1 + '        dirpath = os.getcwd()'+ "<br>" +
-tab1 + '        dirpath = dirpath + "/results"'+ "<br>" +
-tab1 + '        if not os.path.exists(dirpath):'+ "<br>" +
-tab2 + '            os.makedirs(dirpath)    '+ "<br>" +
+tab + 'def get_testcase_names(self, data_values, data):'+ "<br>" +
+tab1 + 'testcase_list = []'+ "<br>" +
+tab1 + 'for i in range(len(data_values[data])):'+ "<br>" +
+tab2 + 'testcase_list.append((data_values[data][i]["testCase"], i))'+ "<br>" +
+tab1 + 'return testcase_list'+ "<br>" +
 ''+ "<br>" +
-tab1 + '        file_name = datetime.datetime.now().strftime("%Y_%m_%d_%H%M_report.html")'+ "<br>" +
-tab1 + '        file_name = dirpath + "/" + file_name'+ "<br>" +
-tab1 + '        output = open(file_name, "wb")'+ "<br>" +
-tab1 + '        runner = HTMLTestRunner(stream=output, verbosity=2, title="Regression Suite", dirTestScreenshots="/others")'+ "<br>" +
-tab1 + '        runner.run(test_suite)'+ "<br>" +
-tab1 + '        output.close()'; "<br>" 
+tab + 'def execute_test(self, test_suite):'+ "<br>" +
+tab1 + 'dirpath = os.getcwd()'+ "<br>" +
+tab1 + 'dirpath = dirpath + "/results"'+ "<br>" +
+tab1 + 'if not os.path.exists(dirpath):'+ "<br>" +
+tab2 + 'os.makedirs(dirpath)    '+ "<br>" +
+''+ "<br>" +
+tab1 + 'file_name = datetime.datetime.now().strftime("%Y_%m_%d_%H%M_report.html")'+ "<br>" +
+tab1 + 'file_name = dirpath + "/" + file_name'+ "<br>" +
+tab1 + 'output = open(file_name, "wb")'+ "<br>" +
+tab1 + 'runner = HTMLTestRunner(stream=output, verbosity=2, title="Regression Suite", dirTestScreenshots="/others")'+ "<br>" +
+tab1 + 'runner.run(test_suite)'+ "<br>" +
+tab1 + 'output.close()'; "<br>" 
 	
 
-    
-    
-  lib_window = window.open("lib_window","com_MyDomain_lib")
-  // To Clear the content each time
-  lib_window.document.write('');
-  lib_window.document.write(htmlBody)
-  lib_window.document.write(libDocumentContentStart)
+  var libFileName = "lib.py"
+  window_handle.document.getElementById("LibraryFile").contentWindow.document.write('')
+  window_handle.document.getElementById("LibraryFile").contentWindow.document.write(htmlBody)
+  window_handle.document.getElementById("LibraryFile").contentWindow.document.write(libDocumentContentStart)
+
+  var libContent = window_handle.document.getElementById("LibraryFile").contentWindow.document.body.innerText
+  saveFile(libContent,libFileName)  
 }
 
 function printServerDetails()
@@ -3406,14 +3416,15 @@ if(localStorage.url == undefined)
   var deviceYamlDocumentContentStart = '# Save YAML file job\\system_properties.yaml' + "<br>" + "<br>" +
     'browser: "chrome"'+ "<br>" +
     'chrome_driver_path : "/Users/anpradha/Downloads/chromedriver"'+ "<br>" +
-    '  url: "' + localStorage.url +  "\"<br>"
+    'url: "' + localStorage.url +  "\"<br>"
   
-    
-  device_window = window.open("device_yaml_window","com_MyDomain_device")
-  // To Clear the content each time
-  device_window.document.write('');
-  device_window.document.write(htmlBody)
-  device_window.document.write(deviceYamlDocumentContentStart)
+
+  var serverFileName = "system_properties.yaml"
+  window_handle.document.getElementById("ServerFile").contentWindow.document.write('')
+  window_handle.document.getElementById("ServerFile").contentWindow.document.write(htmlBody)
+  window_handle.document.getElementById("ServerFile").contentWindow.document.write(deviceYamlDocumentContentStart)
+  var serverContent = window_handle.document.getElementById("ServerFile").contentWindow.document.body.innerText
+  saveFile(serverContent,serverFileName)  
 }
   
  
@@ -3450,7 +3461,7 @@ function printJob()
 
 var jobDocumentContentStart = "# Please Save this File as job\\" +
 currentClassName.toLowerCase() + "_job.py" +"</br></br>" + 
-'# !/bin/env python  </br> '+
+'# !/bin/env python  </br>'+
 'import unittest </br>'+
 'import os</br>'+
 'import sys</br>'+
@@ -3458,27 +3469,24 @@ currentClassName.toLowerCase() + "_job.py" +"</br></br>" +
 'from library.lib import FlexLib</br>'+
 '</br> </br>'+
 'flex_lib_obj = FlexLib() </br> </br>'+
-''+
-''+
 'class MyTestSuite(unittest.TestCase): </br> </br>'+
-' '+
-'    &nbsp;&nbsp;&nbsp;&nbsp;def test_issue(self): </br> </br>'+
-''+
-'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# List all tests with testFileName.TestClassName </br>'+
-'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test = unittest.TestLoader().loadTestsFromTestCase(flex_lib_obj.import_from_dotted_path(\"testcase.'+ currentTestName + '.' + currentClassName + "Testcases" + '\")) </br> </br>'+
-'        '+
-'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# create a test suite  </br>'+
-'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_suite = unittest.TestSuite([test]) </br> </br>'+
-''+
-'        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex_lib_obj.execute_test(test_suite)</br>'+
-''+
+'&nbsp;&nbsp;&nbsp;&nbsp;def test_issue(self): </br> </br>'+
+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# List all tests with testFileName.TestClassName </br>'+
+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test = unittest.TestLoader().loadTestsFromTestCase(flex_lib_obj.import_from_dotted_path(\"testcase.'+ currentTestName + '.' + currentClassName + "Testcases" + '\")) </br> </br>'+
+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# create a test suite  </br>'+
+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_suite = unittest.TestSuite([test]) </br> </br>'+
+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex_lib_obj.execute_test(test_suite)</br>'+
 'if __name__ == \'__main__\': </br>'+
-'    &nbsp;&nbsp;&nbsp;&nbsp;unittest.main() </br>';
+'&nbsp;&nbsp;&nbsp;&nbsp;unittest.main() </br>';
  
-  job_window = window.open("job_window","com_MyDomain_job")
-  job_window.document.write('');  
-  job_window.document.write(htmlBody)
-  job_window.document.write(jobDocumentContentStart)
+  var jobFileName = currentClassName.toLowerCase() + "_job.py"
+  window_handle.document.getElementById("JobFile").contentWindow.document.write('')
+  window_handle.document.getElementById("JobFile").contentWindow.document.write(htmlBody)
+  window_handle.document.getElementById("JobFile").contentWindow.document.write(jobDocumentContentStart)
+
+  var jobContent = window_handle.document.getElementById("JobFile").contentWindow.document.body.innerText
+  saveFile(jobContent,jobFileName)  
+
   
 }
  
@@ -3513,18 +3521,25 @@ function printDataFileForManual()
 
   var dataFileStart = "# Please Save this File as dataset\\" +
   currentClassName.toLowerCase() + ".yaml" +"</br></br>" + 
-  sessionStorage.pageName + '_operation:</br>'+' &nbsp;&nbsp;-</br>'
-  data_window = window.open("data_window","com_MyDomain_data")
-  data_window.document.write('');  
-  data_window.document.write(htmlBody)
+  sessionStorage.pageName + '_operation:</br>'+'&nbsp;&nbsp;-</br>'
+
+
+  var dataFileName = currentClassName.toLowerCase() + ".yaml"
+  window_handle.document.getElementById("DataFile").contentWindow.document.write('')
+  window_handle.document.getElementById("DataFile").contentWindow.document.write(htmlBody)
   if(sessionStorage.addNewScenario == "false")
   {
-    data_window.document.write(dataFileStart)
-    var temp = '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>'
+    window_handle.document.getElementById("DataFile").contentWindow.document.write(dataFileStart)
+    var temp = '&nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>'
     sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual.replace(temp,"")
-    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '  &nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
+    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '&nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
+
   }
-  data_window.document.write(sessionStorage.dataDocumentContentManual) 
+  window_handle.document.getElementById("DataFile").contentWindow.document.write(sessionStorage.dataDocumentContentManual)
+  var dataContent = window_handle.document.getElementById("DataFile").contentWindow.document.body.innerText
+  saveFile(dataContent,dataFileName)  
+
+
 }
  
  
@@ -3829,16 +3844,16 @@ function printSpecFileForManual()
   '</br>'+
   '@ddt</br>'+
   'class ' + specClassName + '(unittest.TestCase):</br>'+
-  '    &nbsp;&nbsp""" This is user Testcases section """</br></br>'+
+  '&nbsp;&nbsp""" This is user Testcases section """</br></br>'+
   ''+
-  '    &nbsp;&nbsp;# This is how to create a setup section</br>'+
-  '    &nbsp;&nbsp;@classmethod</br>'+
-  '    &nbsp;&nbsp;def setUpClass(self):</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;""" Testcase Setup section """</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Preparing the test")</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;self.obj = ' +  currentClassName + '()</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;self.driver = flexlib_obj.login()</br>'+
-  '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Setup Successful")</br>'
+  '&nbsp;&nbsp;# This is how to create a setup section</br>'+
+  '&nbsp;&nbsp;@classmethod</br>'+
+  '&nbsp;&nbsp;def setUpClass(self):</br>'+
+  '&nbsp;&nbsp;&nbsp;&nbsp;""" Testcase Setup section """</br>'+
+  '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Preparing the test")</br>'+
+  '&nbsp;&nbsp;&nbsp;&nbsp;self.obj = ' +  currentClassName + '()</br>'+
+  '&nbsp;&nbsp;&nbsp;&nbsp;self.driver = flexlib_obj.login()</br>'+
+  '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Setup Successful")</br>'
 
   
   specDocumentContentStartManual  =  specDocumentContentStartManual  + '&nbsp;&nbsp;&nbsp;&nbsp;self.' + sessionStorage.pageName + '_operation' + '_dataSet = dataValues["' + sessionStorage.pageName + '_operation' + '"]</br>'
@@ -3848,10 +3863,10 @@ function printSpecFileForManual()
     '</br>'+
     '</br>'+
     '&nbsp;&nbsp;@idata(flexlib_obj.get_testcase_names(dataValues, "' + nameOfData + '"))</br>'+
-    '    &nbsp;&nbsp;def test_'+sessionStorage.pageName + '_operation(self, data_tup):</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;""" add description about the test """</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;try:</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data = self.' + sessionStorage.pageName + '_operation_dataSet[data_tup[1]]</br>'
+    '&nbsp;&nbsp;def test_'+sessionStorage.pageName + '_operation(self, data_tup):</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;""" add description about the test """</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;try:</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data = self.' + sessionStorage.pageName + '_operation_dataSet[data_tup[1]]</br>'
 
     
     specDocumentContentStartManual  =  specDocumentContentStartManual + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
@@ -3859,24 +3874,27 @@ function printSpecFileForManual()
 
 
     specDocumentContentStartManual  =  specDocumentContentStartManual  +
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Subtest test Section")</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;except Exception as e:</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Exception Occured - %s" % (traceback.format_exc().splitlines()))</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, data_tup[0])</br>'+
-    '            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fail("Exception Occurred - %s" % e)</br></br></br>'
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Subtest test Section")</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;except Exception as e:</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Exception Occured - %s" % (traceback.format_exc().splitlines()))</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, data_tup[0])</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fail("Exception Occurred - %s" % e)</br></br></br>'
 
   specDocumentContentStartManual =  specDocumentContentStartManual  +
-    '    &nbsp;&nbsp;# This is how to create a cleanup section</br>'+
-    '    &nbsp;&nbsp;@classmethod</br>'+
-    '    &nbsp;&nbsp;def tearDownClass(self):</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;""" Testcase cleanup section """</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;log.info("Pass testcase cleanup")</br>'+
-    '        &nbsp;&nbsp;&nbsp;&nbsp;self.driver.quit()</br>'
+    '&nbsp;&nbsp;# This is how to create a cleanup section</br>'+
+    '&nbsp;&nbsp;@classmethod</br>'+
+    '&nbsp;&nbsp;def tearDownClass(self):</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;""" Testcase cleanup section """</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Pass testcase cleanup")</br>'+
+    '&nbsp;&nbsp;&nbsp;&nbsp;self.driver.quit()</br>'
 
-  spec_window = window.open("spec_window","com_MyDomain_spec")
-  spec_window.document.write('');    
-  spec_window.document.write(htmlBody)
-  spec_window.document.write(specDocumentContentStartManual)
+  var specFileName = currentClassName.toLowerCase() + "_test.py"
+  window_handle.document.getElementById("SpecFile").contentWindow.document.write('')
+  window_handle.document.getElementById("SpecFile").contentWindow.document.write(htmlBody)
+  window_handle.document.getElementById("SpecFile").contentWindow.document.write(specDocumentContentStartManual)
+
+  var specContent = window_handle.document.getElementById("SpecFile").contentWindow.document.body.innerText
+  saveFile(specContent,specFileName)  
 } 
 
 
@@ -4811,6 +4829,9 @@ function addEventsToAllFrames()
 function ManualBuild()
 {
 
+    loadExternalScript()    
+
+
   // Code for Frame window 
   addEventsToAllFrames()
 
@@ -4965,6 +4986,24 @@ function generatePageName(baseUrl)
   if(userDefinedClassName && userDefinedClassName.length > 0)
     sessionStorage.pageName = userDefinedClassName
 
+
+}
+
+function loadExternalScript()
+{
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.js';
+  document.head.appendChild(script);
+
+}
+
+function saveFile(content,fileName)
+{
+  var blob = new Blob([content], {
+  type: "text/plain;charset=utf-8"
+    });
+  saveAs(blob, fileName);
 
 }
 

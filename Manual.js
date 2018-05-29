@@ -1003,6 +1003,14 @@ function printHTMLBodyConfirm(lableValue,message,flag)
 
   function printHTMLBody(window_handle,elementIDs,currentElementEventType,actualEle,custom)
   {
+
+	  tab = "	"
+	  tab1 = tab + tab
+	  tab2 = tab + tab + tab 
+	  tab3 = tab + tab + tab + tab
+	  tab4 = tab + tab + tab + tab + tab
+	  tab5 = tab + tab + tab + tab + tab + tab
+
     for (var ids in elementIDs)
     {
  
@@ -1062,11 +1070,11 @@ function printHTMLBodyConfirm(lableValue,message,flag)
       // For table row / column identificatin using identifier 
       if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
       {
-          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
+          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+ tab1 + "self."+lableValue+ " = \""+sessionStorage.locatorNameContain+"\"</br>"
       }
       else
       {
-          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"  
+          sessionStorage.locatorDocumentContent = sessionStorage.locatorDocumentContent+ tab1 + "self."+lableValue+ " = \""+modifiedLocator+"\"</br>"  
       }  
       generateOperationScriptForManual(lableValue,elementIDs[ids],ids,actualEle,custom)
       generateDataFileForManual(lableValue,actualEle)    
@@ -2022,7 +2030,7 @@ function getElementFromList(lableValue, locatorName)
       if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
         {
           //updateTabValue()
-          sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
+          sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + "    " + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
 
           sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab2 + "locator = " + "self." + lableValue + "</br>"
           sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual + tab2 + "indentifier = " + "data['"+lableValue + "_Identifier']" + "</br>"
@@ -2076,7 +2084,7 @@ function getElementFromList(lableValue, locatorName)
 function updateTabValue()
 {
     tab = ""
-    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab1 = "	"
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1
 
@@ -2087,7 +2095,7 @@ function updateTabValue()
     //sessionStorage.setLoop = "continue"
     //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab2 + "if \"" +lableValue + "_data\" in data:" + "</br>"
     //sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab3 + "for i in range(len(data['"+lableValue + "_data'])):</br></br>"
-    tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab = "	"
     tab1 = tab + tab
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1   
@@ -2095,14 +2103,14 @@ function updateTabValue()
 
 
     tab = ""
-    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab1 = "	"
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1
 
   }
   if(sessionStorage.setLoop && sessionStorage.setLoop == "continue")
   {
-    tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab = "	"
     tab1 = tab + tab
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1   
@@ -2114,7 +2122,7 @@ function updateTabValue()
     sessionStorage.setLoop = "false"
     sessionStorage.endLoop = "false"
     tab = ""
-    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab1 = "	"
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1
   }
@@ -2164,7 +2172,7 @@ function generateOperationScriptForManual(lableValue,locatorName,ids,ele,custom)
   if(ids == "byXpathUsingContains" &&  sessionStorage.UsingbyXpathUsingContains  && sessionStorage.UsingbyXpathUsingContains == "true")
   {
     //updateTabValue()
-    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
+    sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + "    " + lableValue + "_Identifier: \""+ sessionStorage.textToLookFor +"\"</br>"
     
     sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab2 + "locator = " + "self." + lableValue + "</br>"
     sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab2 + "indentifier = " + "data['"+lableValue + "_Identifier']" + "</br>"
@@ -2998,14 +3006,21 @@ function printLocator()
   "tab1 { padding-left: 2em; }" + 
   "</style></head><body >";
 
+  tab = "	"
+  tab1 = tab + tab
+  tab2 = tab + tab + tab 
+  tab3 = tab + tab + tab + tab
+  tab4 = tab + tab + tab + tab + tab
+  tab5 = tab + tab + tab + tab + tab + tab
+
   var locatorDocumentContentStart = "# Please Save this File as locator\\" +
   currentClassName.toLowerCase() + "_locator.py" +"</br></br>"+
   "__author__ = 'anpradha'" +"</br>"+
   "from library.lib import *"+ "</br>" +
   "class "+ currentLocatorClassName +
   "():"+ "</br>" +  "</br>" +
-  "&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):" + "</br>" +
-  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FlexLib.__init__(self)" + "</br>"
+  tab + "def __init__(self):" + "</br>" +
+  tab1 + "FlexLib.__init__(self)" + "</br>"
  
   
 
@@ -3016,7 +3031,8 @@ function printLocator()
     window_handle.document.getElementById("LocatorFile").contentWindow.document.write(locatorDocumentContentStart)
   window_handle.document.getElementById("LocatorFile").contentWindow.document.write(sessionStorage.locatorDocumentContent)
   var locatorContent = window_handle.document.getElementById("LocatorFile").contentWindow.document.body.innerText
-  saveFile(locatorContent,locatorFileName)  
+  //saveFile(locatorContent,locatorFileName)  
+  download(locatorFileName,locatorContent)
 }
  
 function printScriptManual()
@@ -3050,10 +3066,12 @@ function printScriptManual()
   "tab1 { padding-left: 2em; }" +
   "</style></head><body>";
   
-  tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  tab = "	"
   tab1 = tab + tab
-  tab2 = tab + tab + tab
-  tab3 = tab2 + tab
+  tab2 = tab + tab + tab 
+  tab3 = tab + tab + tab + tab
+  tab4 = tab + tab + tab + tab + tab
+  tab5 = tab + tab + tab + tab + tab + tab
 
   var scriptDocumentContentStart = "# Please Save this File as script\\" +
   currentClassName.toLowerCase() + ".py" +"</br></br>" +
@@ -3068,10 +3086,10 @@ function printScriptManual()
   "class " + currentClassName +
   "(FlexLib, " + currentLocatorClassName+
   "):"+ "</br>" +  "</br>" +
-  "&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):" + "</br>" +
-  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FlexLib.__init__(self)" + "</br>" +
-  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ currentLocatorClassName +
-  ".__init__(self)" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</br>" + "</br>" +  "</br>" +
+  tab + "def __init__(self):" + "</br>" +
+  tab1 + "FlexLib.__init__(self)" + "</br>" +
+  tab1 + ""+ currentLocatorClassName +
+  ".__init__(self)" + tab1 + "</br>" + "</br>" +  "</br>" +
   tab +  'def generateLocator(self,indentifier,locator):'+ "<br>" +
   tab1 + 'actual = ""'+ "<br>" +
   tab1 + 'names  = indentifier.split("  ")'+ "<br>" +
@@ -3083,7 +3101,7 @@ function printScriptManual()
   tab1 + 'return locator'; "<br>" 
 
 
-  var scriptFunctionStart = "</br></br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def " + sessionStorage.pageName + "_operation(self,driver,data):" + "</br>"
+  var scriptFunctionStart = "</br></br>" + tab + "def " + sessionStorage.pageName + "_operation(self,driver,data):" + "</br>"
 
   var scriptFileName = currentClassName.toLowerCase() + ".py"
   window_handle.document.getElementById("ScriptFile").contentWindow.document.write('')
@@ -3093,21 +3111,22 @@ function printScriptManual()
     window_handle.document.getElementById("ScriptFile").contentWindow.document.write(scriptDocumentContentStart)
   }
   window_handle.document.getElementById("ScriptFile").contentWindow.document.write(scriptFunctionStart)
-  sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info(\"****** Operation Completed *****\")</br></br>","")
-  sessionStorage.functionContentManual = sessionStorage.functionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "log.info(\"****** Operation Completed *****\")" + "</br></br>"
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual.replace(tab1 + "log.info(\"****** Operation Completed *****\")</br></br>","")
+  sessionStorage.functionContentManual = sessionStorage.functionContentManual+ tab1 + "log.info(\"****** Operation Completed *****\")" + "</br></br>"
   window_handle.document.getElementById("ScriptFile").contentWindow.document.write(sessionStorage.functionContentManual)
 
-  var verifyFunctionContentStart = "</br>" + "&nbsp;&nbsp;&nbsp;&nbsp;def verify_" +sessionStorage.pageName + "_operation(self,driver,data):" + "&nbsp;&nbsp;&nbsp;&nbsp;</br>" + 
-  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "#driver.refresh()</br></br>"
+  var verifyFunctionContentStart = "</br>" + tab + "def verify_" +sessionStorage.pageName + "_operation(self,driver,data):" + tab + "</br>" + 
+  tab1 + "#driver.refresh()</br></br>"
 
   window_handle.document.getElementById("ScriptFile").contentWindow.document.write(verifyFunctionContentStart)
 
-  sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info(\"******  Verification for operation Completed *****\")</br></br>","")  
-  sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "log.info(\"******  Verification for operation Completed *****\")" + "</br></br>"    
+  sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual.replace(tab1 + "log.info(\"******  Verification for operation Completed *****\")</br></br>","")  
+  sessionStorage.verifyFunctionContentManual = sessionStorage.verifyFunctionContentManual+ tab1 + "log.info(\"******  Verification for operation Completed *****\")" + "</br></br>"    
   window_handle.document.getElementById("ScriptFile").contentWindow.document.write(sessionStorage.verifyFunctionContentManual)
 
   var scriptContent = window_handle.document.getElementById("ScriptFile").contentWindow.document.body.innerText
-  saveFile(scriptContent,scriptFileName)  
+  //saveFile(scriptContent,scriptFileName)  
+  download(scriptFileName,scriptContent)
 }
 
    
@@ -3192,11 +3211,12 @@ function printLib()
   "font-size: 13px;"+
   "margin: 31px 97px;"+
   "}"+
-  "tab { padding-left: 4em; }" +
-  "tab1 { padding-left: 2em; }" +
+  "tab { padding-left: 2em; }" +
+  "tab1 { padding-left: 4em; }" +
   "</style></head><body>";
   
-  tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  //tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  tab = "	"
   tab1 = tab + tab
   tab2 = tab + tab + tab 
   tab3 = tab + tab + tab + tab
@@ -3373,7 +3393,9 @@ tab1 + 'output.close()'; "<br>"
   window_handle.document.getElementById("LibraryFile").contentWindow.document.write(libDocumentContentStart)
 
   var libContent = window_handle.document.getElementById("LibraryFile").contentWindow.document.body.innerText
-  saveFile(libContent,libFileName)  
+  //saveFile(libContent,libFileName)  
+  download(libFileName,libContent)
+
 }
 
 function printServerDetails()
@@ -3403,7 +3425,7 @@ function printServerDetails()
   "tab1 { padding-left: 2em; }" +
   "</style></head><body>";
   
-  tab = "&nbsp;"
+  tab = "	"
   tab1 = tab + tab
   tab2 = tab + tab + tab 
   tab3 = tab + tab + tab + tab
@@ -3424,7 +3446,9 @@ if(localStorage.url == undefined)
   window_handle.document.getElementById("ServerFile").contentWindow.document.write(htmlBody)
   window_handle.document.getElementById("ServerFile").contentWindow.document.write(deviceYamlDocumentContentStart)
   var serverContent = window_handle.document.getElementById("ServerFile").contentWindow.document.body.innerText
-  saveFile(serverContent,serverFileName)  
+  //saveFile(serverContent,serverFileName) 
+  download(serverFileName,serverContent)
+ 
 }
   
  
@@ -3459,6 +3483,13 @@ function printJob()
   "tab1 { padding-left: 4em; }" +
   "</style></head><body>";
 
+  tab = "	"
+  tab1 = tab + tab
+  tab2 = tab + tab + tab 
+  tab3 = tab + tab + tab + tab
+  tab4 = tab + tab + tab + tab + tab
+  tab5 = tab + tab + tab + tab + tab + tab
+
 var jobDocumentContentStart = "# Please Save this File as job\\" +
 currentClassName.toLowerCase() + "_job.py" +"</br></br>" + 
 '# !/bin/env python  </br>'+
@@ -3470,14 +3501,14 @@ currentClassName.toLowerCase() + "_job.py" +"</br></br>" +
 '</br> </br>'+
 'flex_lib_obj = FlexLib() </br> </br>'+
 'class MyTestSuite(unittest.TestCase): </br> </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;def test_issue(self): </br> </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# List all tests with testFileName.TestClassName </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test = unittest.TestLoader().loadTestsFromTestCase(flex_lib_obj.import_from_dotted_path(\"testcase.'+ currentTestName + '.' + currentClassName + "Testcases" + '\")) </br> </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# create a test suite  </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_suite = unittest.TestSuite([test]) </br> </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flex_lib_obj.execute_test(test_suite)</br>'+
+tab + 'def test_issue(self): </br> </br>'+
+tab1 + '# List all tests with testFileName.TestClassName </br>'+
+tab1 + 'test = unittest.TestLoader().loadTestsFromTestCase(flex_lib_obj.import_from_dotted_path(\"testcase.'+ currentTestName + '.' + currentClassName + "Testcases" + '\")) </br> </br>'+
+tab1 + '# create a test suite  </br>'+
+tab1 + 'test_suite = unittest.TestSuite([test]) </br> </br>'+
+tab1+ 'flex_lib_obj.execute_test(test_suite)</br>'+
 'if __name__ == \'__main__\': </br>'+
-'&nbsp;&nbsp;&nbsp;&nbsp;unittest.main() </br>';
+tab+ 'unittest.main() </br>';
  
   var jobFileName = currentClassName.toLowerCase() + "_job.py"
   window_handle.document.getElementById("JobFile").contentWindow.document.write('')
@@ -3485,7 +3516,8 @@ currentClassName.toLowerCase() + "_job.py" +"</br></br>" +
   window_handle.document.getElementById("JobFile").contentWindow.document.write(jobDocumentContentStart)
 
   var jobContent = window_handle.document.getElementById("JobFile").contentWindow.document.body.innerText
-  saveFile(jobContent,jobFileName)  
+  //saveFile(jobContent,jobFileName)  
+  download(jobFileName,jobContent)
 
   
 }
@@ -3519,9 +3551,18 @@ function printDataFileForManual()
   "tab1 { padding-left: 2em; }" +
   "</style></head><body>";
 
+  tab = "  "
+  tab1 = tab + tab
+  tab2 = tab + tab + tab 
+  tab3 = tab + tab + tab + tab
+  tab4 = tab + tab + tab + tab + tab
+  tab5 = tab + tab + tab + tab + tab + tab
+
   var dataFileStart = "# Please Save this File as dataset\\" +
   currentClassName.toLowerCase() + ".yaml" +"</br></br>" + 
-  sessionStorage.pageName + '_operation:</br>'+'&nbsp;&nbsp;-</br>'
+  sessionStorage.pageName + '_operation:</br>'
+  + tab + '-' +
+  '</br>'
 
 
   var dataFileName = currentClassName.toLowerCase() + ".yaml"
@@ -3530,14 +3571,15 @@ function printDataFileForManual()
   if(sessionStorage.addNewScenario == "false")
   {
     window_handle.document.getElementById("DataFile").contentWindow.document.write(dataFileStart)
-    var temp = '&nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>'
+    var temp = tab + 'testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>'
     sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual.replace(temp,"")
-    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   '&nbsp;&nbsp;&nbsp;&nbsp;testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
+    sessionStorage.dataDocumentContentManual = sessionStorage.dataDocumentContentManual +   tab1 + 'testCase: "' + sessionStorage.pageName  +"_operation_test" + '"<br><br>';
 
   }
   window_handle.document.getElementById("DataFile").contentWindow.document.write(sessionStorage.dataDocumentContentManual)
   var dataContent = window_handle.document.getElementById("DataFile").contentWindow.document.body.innerText
-  saveFile(dataContent,dataFileName)  
+  //saveFile(dataContent,dataFileName)  
+  download(dataFileName,dataContent)
 
 
 }
@@ -3588,7 +3630,7 @@ function generateDataFileForManual(labelName,elem)
 {
 
   var tab = ""
-  var tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+  var tab1 = "    "
   var tab2 = tab1 + tab1
   var tab3 = tab1 + tab1 + tab1
 
@@ -3598,7 +3640,7 @@ function generateDataFileForManual(labelName,elem)
     // code for 
     //sessionStorage.setLoop = "continue"
     sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + labelName + "_data:</br>" + tab1 +"-</br>"
-    tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab = "    "
     tab1 = tab + tab
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1   
@@ -3607,7 +3649,7 @@ function generateDataFileForManual(labelName,elem)
   }
   if(sessionStorage.setLoop && sessionStorage.setLoop == "continue")
   {
-    tab = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab = "    "
     tab1 = tab + tab
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1   
@@ -3619,7 +3661,7 @@ function generateDataFileForManual(labelName,elem)
     sessionStorage.setLoop = "false"
     sessionStorage.endLoop = "false"
     tab = ""
-    tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;"
+    tab1 = "    "
     tab2 = tab1 + tab1
     tab3 = tab1 + tab1 + tab1
   }
@@ -3824,6 +3866,13 @@ function printSpecFileForManual()
   "tab1 { padding-left: 2em; }" +
   "</style></head><body>";
 
+  tab = "	"
+  tab1 = tab + tab
+  tab2 = tab + tab + tab 
+  tab3 = tab + tab + tab + tab
+  tab4 = tab + tab + tab + tab + tab
+  tab5 = tab + tab + tab + tab + tab + tab
+
   var specDocumentContentStartManual = "# Please Save this File as testcase\\" +
   currentClassName.toLowerCase() + "_test.py" +"</br></br>"+
   "__author__ = 'anpradha' </br>"+
@@ -3844,49 +3893,49 @@ function printSpecFileForManual()
   '</br>'+
   '@ddt</br>'+
   'class ' + specClassName + '(unittest.TestCase):</br>'+
-  '&nbsp;&nbsp""" This is user Testcases section """</br></br>'+
+  tab + '""" This is user Testcases section """</br></br>'+
   ''+
-  '&nbsp;&nbsp;# This is how to create a setup section</br>'+
-  '&nbsp;&nbsp;@classmethod</br>'+
-  '&nbsp;&nbsp;def setUpClass(self):</br>'+
-  '&nbsp;&nbsp;&nbsp;&nbsp;""" Testcase Setup section """</br>'+
-  '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Preparing the test")</br>'+
-  '&nbsp;&nbsp;&nbsp;&nbsp;self.obj = ' +  currentClassName + '()</br>'+
-  '&nbsp;&nbsp;&nbsp;&nbsp;self.driver = flexlib_obj.login()</br>'+
-  '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Setup Successful")</br>'
+  tab + '# This is how to create a setup section</br>'+
+  tab + '@classmethod</br>'+
+  tab + 'def setUpClass(self):</br>'+
+  tab1 + '""" Testcase Setup section """</br>'+
+  tab1 + 'log.info("Preparing the test")</br>'+
+  tab1 + 'self.obj = ' +  currentClassName + '()</br>'+
+  tab1 + 'self.driver = flexlib_obj.login()</br>'+
+  tab1 + 'log.info("Setup Successful")</br>'
 
   
-  specDocumentContentStartManual  =  specDocumentContentStartManual  + '&nbsp;&nbsp;&nbsp;&nbsp;self.' + sessionStorage.pageName + '_operation' + '_dataSet = dataValues["' + sessionStorage.pageName + '_operation' + '"]</br>'
+  specDocumentContentStartManual  =  specDocumentContentStartManual  + tab1 + 'self.' + sessionStorage.pageName + '_operation' + '_dataSet = dataValues["' + sessionStorage.pageName + '_operation' + '"]</br>'
 
    var nameOfData = sessionStorage.pageName + '_operation'
   specDocumentContentStartManual  =  specDocumentContentStartManual  + 
     '</br>'+
     '</br>'+
-    '&nbsp;&nbsp;@idata(flexlib_obj.get_testcase_names(dataValues, "' + nameOfData + '"))</br>'+
-    '&nbsp;&nbsp;def test_'+sessionStorage.pageName + '_operation(self, data_tup):</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;""" add description about the test """</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;try:</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data = self.' + sessionStorage.pageName + '_operation_dataSet[data_tup[1]]</br>'
+    tab +'@idata(flexlib_obj.get_testcase_names(dataValues, "' + nameOfData + '"))</br>'+
+    tab +'def test_'+sessionStorage.pageName + '_operation(self, data_tup):</br>'+
+    tab1 + '""" add description about the test """</br>'+
+    tab1 + 'try:</br>'+
+    tab2 + 'data = self.' + sessionStorage.pageName + '_operation_dataSet[data_tup[1]]</br>'
 
     
-    specDocumentContentStartManual  =  specDocumentContentStartManual + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
-    specDocumentContentStartManual =  specDocumentContentStartManual  + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.verify_' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
+    specDocumentContentStartManual  =  specDocumentContentStartManual + tab2 + 'self.obj.' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
+    specDocumentContentStartManual =  specDocumentContentStartManual  + tab2 + 'self.obj.verify_' + sessionStorage.pageName +'_operation(self.driver,data)' + '</br>' 
 
 
     specDocumentContentStartManual  =  specDocumentContentStartManual  +
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Subtest test Section")</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;except Exception as e:</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log.info("Exception Occured - %s" % (traceback.format_exc().splitlines()))</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.obj.capture_failure(self.driver, data_tup[0])</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fail("Exception Occurred - %s" % e)</br></br></br>'
+    tab2 + 'log.info("Subtest test Section")</br>'+
+    tab1 + 'except Exception as e:</br>'+
+    tab2 + 'log.info("Exception Occured - %s" % (traceback.format_exc().splitlines()))</br>'+
+    tab2 + 'self.obj.capture_failure(self.driver, data_tup[0])</br>'+
+    tab2 + 'self.fail("Exception Occurred - %s" % e)</br></br></br>'
 
   specDocumentContentStartManual =  specDocumentContentStartManual  +
-    '&nbsp;&nbsp;# This is how to create a cleanup section</br>'+
-    '&nbsp;&nbsp;@classmethod</br>'+
-    '&nbsp;&nbsp;def tearDownClass(self):</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;""" Testcase cleanup section """</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;log.info("Pass testcase cleanup")</br>'+
-    '&nbsp;&nbsp;&nbsp;&nbsp;self.driver.quit()</br>'
+    tab +'# This is how to create a cleanup section</br>'+
+    tab +'@classmethod</br>'+
+    tab +'def tearDownClass(self):</br>'+
+    tab1 + '""" Testcase cleanup section """</br>'+
+    tab1 + 'log.info("Pass testcase cleanup")</br>'+
+    tab1 + 'self.driver.quit()</br>'
 
   var specFileName = currentClassName.toLowerCase() + "_test.py"
   window_handle.document.getElementById("SpecFile").contentWindow.document.write('')
@@ -3894,7 +3943,9 @@ function printSpecFileForManual()
   window_handle.document.getElementById("SpecFile").contentWindow.document.write(specDocumentContentStartManual)
 
   var specContent = window_handle.document.getElementById("SpecFile").contentWindow.document.body.innerText
-  saveFile(specContent,specFileName)  
+  //saveFile(specContent,specFileName) 
+  download(specFileName,specContent)
+
 } 
 
 
@@ -4829,7 +4880,6 @@ function addEventsToAllFrames()
 function ManualBuild()
 {
 
-    loadExternalScript()    
 
 
   // Code for Frame window 
@@ -4839,6 +4889,7 @@ function ManualBuild()
   
   // Code for display Window
   window_handle = printHTMLHeaderForManual()
+
 
 }
 
@@ -4932,7 +4983,7 @@ function focusoutEventHandler(event)
       sessionStorage.alert = "false"
       sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateAlertCode(alertLableValue)
 
-      sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + alertLableValue + ": \""+ sessionStorage.alert_message + "\"</br>"
+      sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + "    " + alertLableValue + ": \""+ sessionStorage.alert_message + "\"</br>"
 
       printHTMLBodyAlert(alertLableValue,sessionStorage.alert_message)
     }
@@ -4943,7 +4994,7 @@ function focusoutEventHandler(event)
       // Generate Alert code
       sessionStorage.confirm = "false"
       sessionStorage.functionContentManual = sessionStorage.functionContentManual + tab + generateConfirmCode(sessionStorage.confirm_status,confirmLableValue)
-      sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + tab1 + confirmLableValue + ": \""+ sessionStorage.confirm_message +"\"</br>"
+      sessionStorage.dataDocumentContentManual  =  sessionStorage.dataDocumentContentManual + "    " + confirmLableValue + ": \""+ sessionStorage.confirm_message +"\"</br>"
       printHTMLBodyConfirm(confirmLableValue,sessionStorage.confirm_message,sessionStorage.confirm_status)
     }
 }
@@ -4989,14 +5040,6 @@ function generatePageName(baseUrl)
 
 }
 
-function loadExternalScript()
-{
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.js';
-  document.head.appendChild(script);
-
-}
 
 function saveFile(content,fileName)
 {
@@ -5005,6 +5048,20 @@ function saveFile(content,fileName)
     });
   saveAs(blob, fileName);
 
+}
+
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 //AutoBuild()

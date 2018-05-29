@@ -9,7 +9,7 @@ chrome.tabs.onUpdated.addListener(function (tab) {
 		chrome.tabs.executeScript(tab.ib, {
 			file: 'Manual.js'
 		});
-		
+				
 	}
 	
 	if(localStorage.operation == "automateBuild" && localStorage.tabID == tab)
